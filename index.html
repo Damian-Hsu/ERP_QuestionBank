@@ -96,15 +96,6 @@
             color: #333;
         }
 
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .pagination .button {
-            margin: 0 5px;
-        }
-
         .history {
             margin-top: 40px;
         }
@@ -144,12 +135,6 @@
         </div>
         <div id="questions"></div>
 
-        <div class="pagination" style="display: none;">
-            <button class="button" id="prevPageBtn">上一頁</button>
-            <span id="pageInfo"></span>
-            <button class="button" id="nextPageBtn">下一頁</button>
-        </div>
-
         <div class="button-group" style="display: none;">
             <button class="button" id="submitBtn">繳交</button>
             <button class="button" id="continueBtn" style="display: none;">繼續</button>
@@ -171,9 +156,6 @@
         let correctAnswers = {};
         let answeredCount = 0;
         let startTime, endTime;
-        let currentPage = 1;
-        const questionsPerPage = 10;
-        let totalPages = 1;
         let usedQuestions = []; // 防止重複的題目
 
         // 從 JSON 文件讀取題庫
@@ -203,34 +185,26 @@
         function renderQuestions() {
             const questionsDiv = document.getElementById("questions");
             questionsDiv.innerHTML = "";
-            const start = (currentPage - 1) * questionsPerPage;
-            const end = start + questionsPerPage;
-            const pageQuestions = selectedQuestions.slice(start, end);
 
-            pageQuestions.forEach((id, index) => {
+            selectedQuestions.forEach((id, index) => {
                 const q = questionBank[id];
-                const globalIndex = start + index;
-                const userAnswer = answers[globalIndex] || '';
+                const userAnswer = answers[index] || '';
 
                 const questionDiv = document.createElement("div");
                 questionDiv.className = "question";
-                questionDiv.id = `q${globalIndex}`;
+                questionDiv.id = `q${index}`;
 
                 questionDiv.innerHTML = `
-                    <p><strong>${globalIndex + 1}. ${q.question}</strong></p>
+                    <p><strong>${index + 1}. ${q.question}</strong></p>
                     <div class="options">
-                        <label><input type="radio" name="q${globalIndex}" value="A" ${userAnswer === 'A' ? 'checked' : ''}> A. ${q.A}</label>
-                        <label><input type="radio" name="q${globalIndex}" value="B" ${userAnswer === 'B' ? 'checked' : ''}> B. ${q.B}</label>
-                        <label><input type="radio" name="q${globalIndex}" value="C" ${userAnswer === 'C' ? 'checked' : ''}> C. ${q.C}</label>
-                        <label><input type="radio" name="q${globalIndex}" value="D" ${userAnswer === 'D' ? 'checked' : ''}> D. ${q.D}</label>
+                        <label><input type="radio" name="q${index}" value="A" ${userAnswer === 'A' ? 'checked' : ''}> A. ${q.A}</label>
+                        <label><input type="radio" name="q${index}" value="B" ${userAnswer === 'B' ? 'checked' : ''}> B. ${q.B}</label>
+                        <label><input type="radio" name="q${index}" value="C" ${userAnswer === 'C' ? 'checked' : ''}> C. ${q.C}</label>
+                        <label><input type="radio" name="q${index}" value="D" ${userAnswer === 'D' ? 'checked' : ''}> D. ${q.D}</label>
                     </div>
                 `;
                 questionsDiv.appendChild(questionDiv);
             });
-
-            document.getElementById("pageInfo").innerText = `第 ${currentPage} 頁，共 ${totalPages} 頁`;
-            document.getElementById("prevPageBtn").disabled = currentPage === 1;
-            document.getElementById("nextPageBtn").disabled = currentPage === totalPages;
         }
 
         // 更新進度條
@@ -248,8 +222,6 @@
                 return;
             }
             selectedQuestions = getRandomQuestions(numQuestions);
-            totalPages = Math.ceil(selectedQuestions.length / questionsPerPage);
-            currentPage = 1;
             answers = {};
             correctAnswers = {};
             answeredCount = 0;
@@ -264,7 +236,6 @@
 
             // 顯示相關區域
             document.querySelector(".progress-bar").style.display = "block";
-            document.querySelector(".pagination").style.display = totalPages > 1 ? "block" : "none";
             document.querySelector(".button-group").style.display = "block";
             document.getElementById("startBtn").style.display = "none";
             document.querySelector(".input-group").style.display = "none";
@@ -330,7 +301,6 @@
         // 繼續測驗
         document.getElementById("continueBtn").addEventListener("click", () => {
             document.querySelector(".progress-bar").style.display = "none";
-            document.querySelector(".pagination").style.display = "none";
             document.querySelector(".button-group").style.display = "none";
             document.getElementById("startBtn").style.display = "inline-block";
             document.querySelector(".input-group").style.display = "block";
@@ -342,21 +312,6 @@
             correctAnswers = {};
             answeredCount = 0;
             updateProgress();
-        });
-
-        // 分頁控制
-        document.getElementById("prevPageBtn").addEventListener("click", () => {
-            if (currentPage > 1) {
-                currentPage--;
-                renderQuestions();
-            }
-        });
-
-        document.getElementById("nextPageBtn").addEventListener("click", () => {
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderQuestions();
-            }
         });
 
         // 保存成績到 LocalStorage
