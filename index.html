@@ -84,6 +84,11 @@
             padding: 10px;
         }
 
+        .correct-answer {
+            color: green;
+            font-weight: bold;
+        }
+
         .score {
             text-align: center;
             margin-top: 20px;
@@ -169,6 +174,7 @@
         let currentPage = 1;
         const questionsPerPage = 10;
         let totalPages = 1;
+        let usedQuestions = []; // 防止重複的題目
 
         // 從 JSON 文件讀取題庫
         async function loadQuestions() {
@@ -186,9 +192,11 @@
 
         // 隨機抽題
         function getRandomQuestions(num) {
-            const keys = Object.keys(questionBank).filter(key => !selectedQuestions.includes(key));
+            const keys = Object.keys(questionBank).filter(key => !usedQuestions.includes(key));
             const shuffled = keys.sort(() => Math.random() - 0.5);
-            return shuffled.slice(0, num);
+            const selected = shuffled.slice(0, num);
+            usedQuestions = usedQuestions.concat(selected);
+            return selected;
         }
 
         // 渲染題目
@@ -295,6 +303,15 @@
                     score++;
                 } else {
                     questionDiv.classList.add("incorrect");
+
+                    // 標記正確答案為綠色
+                    const options = questionDiv.querySelectorAll(".options label");
+                    options.forEach(label => {
+                        const input = label.querySelector('input');
+                        if (input.value === correctAnswer) {
+                            label.classList.add("correct-answer");
+                        }
+                    });
                 }
             });
 
