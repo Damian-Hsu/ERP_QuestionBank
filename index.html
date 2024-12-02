@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測驗系統</title>
+    <style>
+        /* 基本樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3b5998;
+            margin-top: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e6e6e6;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #3b5998;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            margin: 20px 0;
+        }
+
+        .options {
+            margin: 10px 0;
+        }
+
+        .options label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #3b5998;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .button:hover {
+            background-color: #2a4274;
+        }
+
+        .incorrect {
+            background-color: #f8d7da;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .score {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>測驗系統</h1>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <div id="questions"></div>
+        <div class="button-group">
+            <button class="button" id="submitBtn">繳交</button>
+            <button class="button" id="continueBtn" style="display: none;">繼續</button>
+        </div>
+        <div class="score" id="score"></div>
+    </div>
+
+    <script>
+        let questionBank = {};
+        const maxQuestions = 452;
+        const minQuestions = 10;
+        let selectedQuestions = [];
+        let answers = {};
+        let correctAnswers = {};
+        let answeredCount = 0;
+
+        // 隨機抽題
+        function getRandomQuestions(num) {
+            const keys = Object.keys(questionBank).filter(key => !selectedQuestions.includes(key));
+            const shuffled = keys.sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, num);
+        }
+
+        // 渲染題目
+        function renderQuestions(questionIds) {
+            const questionsDiv = document.getElementById("questions");
+            questionsDiv.innerHTML = "";
+            questionIds.forEach((id, index) => {
+                const q = questionBank[id];
+                correctAnswers[index] = q.ans;
+
+                const questionDiv = document.createElement("div");
+                questionDiv.className = "question";
+                questionDiv.id = `q${index}`;
+
+                questionDiv.innerHTML = `
+                    <p><strong>${index + 1}. ${q.question}</strong></p>
+                    <div class="options">
+                        <label><input type="radio" name="q${index}" value="A"> A. ${q.A}</label>
+                        <label><input type="radio" name="q${index}" value="B"> B. ${q.B}</label>
+                        <label><input type="radio" name="q${index}" value="C"> C. ${q.C}</label>
+                        <label><input type="radio" name="q${index}" value="D"> D. ${q.D}</label>
+                    </div>
+                `;
+                questionsDiv.appendChild(questionDiv);
+            });
+        }
+
+        // 更新進度條
+        function updateProgress() {
+            const progress = document.querySelector(".progress");
+            progress.style.width = `${(answeredCount / selectedQuestions.length) * 100}%`;
+        }
+
+        // 提交答案
+        document.getElementById("submitBtn").addEventListener("click", () => {
+            const questionsDiv = document.getElementById("questions");
+            const inputs = questionsDiv.querySelectorAll("input[type=radio]:checked");
+
+            inputs.forEach(input => {
+                const questionId = input.name.replace("q", "");
+                answers[questionId] = input.value;
+            });
+
+            answeredCount = inputs.length;
+            updateProgress();
+
+            // 檢查答案並計算分數
+            let score = 0;
+            selectedQuestions.forEach((id, index) => {
+                const questionDiv = document.getElementById(`q${index}`);
+                const userAnswer = answers[index];
+                const correctAnswer = correctAnswers[index];
+
+                if (userAnswer === correctAnswer) {
+                    score++;
+                } else {
+                    questionDiv.classList.add("incorrect");
+                }
+            });
+
+            // 顯示分數
+            const scoreDiv = document.getElementById("score");
+            scoreDiv.innerHTML = `你的分數是：${score} / ${selectedQuestions.length}`;
+
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("continueBtn").style.display = "inline-block";
+        });
+
+        // 繼續測驗
+        document.getElementById("continueBtn").addEventListener("click", () => {
+            const numQuestions = 50; // 預設值
+            selectedQuestions = getRandomQuestions(numQuestions);
+            renderQuestions(selectedQuestions);
+            document.getElementById("score").innerHTML = "";
+            document.getElementById("submitBtn").style.display = "inline-block";
+            document.getElementById("continueBtn").style.display = "none";
+            answeredCount = 0;
+            updateProgress();
+        });
+
+        // 從 JSON 文件讀取題庫
+        async function loadQuestions() {
+            try {
+                const response = await fetch("ERPquestion.json");
+                if (!response.ok) {
+                    throw new Error("無法讀取題庫");
+                }
+                questionBank = await response.json();
+                const numQuestions = 50; // 預設值
+                selectedQuestions = getRandomQuestions(numQuestions);
+                renderQuestions(selectedQuestions);
+                updateProgress();
+            } catch (error) {
+                console.error("讀取題庫失敗：", error);
+            }
+        }
+
+        // 初始化
+        document.addEventListener("DOMContentLoaded", loadQuestions);
+    </script>
+</body>
+</html>
