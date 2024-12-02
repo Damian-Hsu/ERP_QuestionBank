@@ -90,20 +90,71 @@
             font-size: 18px;
             color: #333;
         }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination .button {
+            margin: 0 5px;
+        }
+
+        .history {
+            margin-top: 40px;
+        }
+
+        .history h2 {
+            color: #3b5998;
+        }
+
+        .input-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .input-group input {
+            width: 60px;
+            padding: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .input-group .button {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>測驗系統</h1>
     <div class="container">
-        <div class="progress-bar">
+        <div class="input-group">
+            <label for="questionCount">請輸入題數（10-452）：</label>
+            <input type="number" id="questionCount" min="10" max="452" value="50">
+            <button class="button" id="startBtn">開始測驗</button>
+        </div>
+
+        <div class="progress-bar" style="display: none;">
             <div class="progress"></div>
         </div>
         <div id="questions"></div>
-        <div class="button-group">
+
+        <div class="pagination" style="display: none;">
+            <button class="button" id="prevPageBtn">上一頁</button>
+            <span id="pageInfo"></span>
+            <button class="button" id="nextPageBtn">下一頁</button>
+        </div>
+
+        <div class="button-group" style="display: none;">
             <button class="button" id="submitBtn">繳交</button>
             <button class="button" id="continueBtn" style="display: none;">繼續</button>
         </div>
         <div class="score" id="score"></div>
+
+        <div class="history">
+            <h2>測驗歷史</h2>
+            <ul id="historyList"></ul>
+        </div>
     </div>
 
     <script>
@@ -114,6 +165,24 @@
         let answers = {};
         let correctAnswers = {};
         let answeredCount = 0;
+        let startTime, endTime;
+        let currentPage = 1;
+        const questionsPerPage = 10;
+        let totalPages = 1;
+
+        // 從 JSON 文件讀取題庫
+        async function loadQuestions() {
+            try {
+                const response = await fetch("ERPquestion.json");
+                if (!response.ok) {
+                    throw new Error("無法讀取題庫");
+                }
+                questionBank = await response.json();
+                document.getElementById("startBtn").disabled = false;
+            } catch (error) {
+                console.error("讀取題庫失敗：", error);
+            }
+        }
 
         // 隨機抽題
         function getRandomQuestions(num) {
@@ -123,28 +192,37 @@
         }
 
         // 渲染題目
-        function renderQuestions(questionIds) {
+        function renderQuestions() {
             const questionsDiv = document.getElementById("questions");
             questionsDiv.innerHTML = "";
-            questionIds.forEach((id, index) => {
+            const start = (currentPage - 1) * questionsPerPage;
+            const end = start + questionsPerPage;
+            const pageQuestions = selectedQuestions.slice(start, end);
+
+            pageQuestions.forEach((id, index) => {
                 const q = questionBank[id];
-                correctAnswers[index] = q.ans;
+                const globalIndex = start + index;
+                const userAnswer = answers[globalIndex] || '';
 
                 const questionDiv = document.createElement("div");
                 questionDiv.className = "question";
-                questionDiv.id = `q${index}`;
+                questionDiv.id = `q${globalIndex}`;
 
                 questionDiv.innerHTML = `
-                    <p><strong>${index + 1}. ${q.question}</strong></p>
+                    <p><strong>${globalIndex + 1}. ${q.question}</strong></p>
                     <div class="options">
-                        <label><input type="radio" name="q${index}" value="A"> A. ${q.A}</label>
-                        <label><input type="radio" name="q${index}" value="B"> B. ${q.B}</label>
-                        <label><input type="radio" name="q${index}" value="C"> C. ${q.C}</label>
-                        <label><input type="radio" name="q${index}" value="D"> D. ${q.D}</label>
+                        <label><input type="radio" name="q${globalIndex}" value="A" ${userAnswer === 'A' ? 'checked' : ''}> A. ${q.A}</label>
+                        <label><input type="radio" name="q${globalIndex}" value="B" ${userAnswer === 'B' ? 'checked' : ''}> B. ${q.B}</label>
+                        <label><input type="radio" name="q${globalIndex}" value="C" ${userAnswer === 'C' ? 'checked' : ''}> C. ${q.C}</label>
+                        <label><input type="radio" name="q${globalIndex}" value="D" ${userAnswer === 'D' ? 'checked' : ''}> D. ${q.D}</label>
                     </div>
                 `;
                 questionsDiv.appendChild(questionDiv);
             });
+
+            document.getElementById("pageInfo").innerText = `第 ${currentPage} 頁，共 ${totalPages} 頁`;
+            document.getElementById("prevPageBtn").disabled = currentPage === 1;
+            document.getElementById("nextPageBtn").disabled = currentPage === totalPages;
         }
 
         // 更新進度條
@@ -153,18 +231,58 @@
             progress.style.width = `${(answeredCount / selectedQuestions.length) * 100}%`;
         }
 
-        // 提交答案
-        document.getElementById("submitBtn").addEventListener("click", () => {
-            const questionsDiv = document.getElementById("questions");
-            const inputs = questionsDiv.querySelectorAll("input[type=radio]:checked");
+        // 開始測驗
+        document.getElementById("startBtn").addEventListener("click", () => {
+            const numInput = document.getElementById("questionCount");
+            let numQuestions = parseInt(numInput.value);
+            if (isNaN(numQuestions) || numQuestions < minQuestions || numQuestions > maxQuestions) {
+                alert(`請輸入 ${minQuestions} 到 ${maxQuestions} 之間的數字`);
+                return;
+            }
+            selectedQuestions = getRandomQuestions(numQuestions);
+            totalPages = Math.ceil(selectedQuestions.length / questionsPerPage);
+            currentPage = 1;
+            answers = {};
+            correctAnswers = {};
+            answeredCount = 0;
 
-            inputs.forEach(input => {
-                const questionId = input.name.replace("q", "");
-                answers[questionId] = input.value;
+            selectedQuestions.forEach((id, index) => {
+                correctAnswers[index] = questionBank[id].ans;
             });
 
-            answeredCount = inputs.length;
+            renderQuestions();
             updateProgress();
+            startTime = new Date();
+
+            // 顯示相關區域
+            document.querySelector(".progress-bar").style.display = "block";
+            document.querySelector(".pagination").style.display = totalPages > 1 ? "block" : "none";
+            document.querySelector(".button-group").style.display = "block";
+            document.getElementById("startBtn").style.display = "none";
+            document.querySelector(".input-group").style.display = "none";
+            document.getElementById("score").innerHTML = "";
+        });
+
+        // 監聽選項變化
+        document.addEventListener("change", (e) => {
+            if (e.target.matches('input[type="radio"]')) {
+                const questionId = e.target.name.replace("q", "");
+                answers[questionId] = e.target.value;
+                answeredCount = Object.keys(answers).length;
+                updateProgress();
+            }
+        });
+
+        // 提交答案
+        document.getElementById("submitBtn").addEventListener("click", () => {
+            if (Object.keys(answers).length < selectedQuestions.length) {
+                alert("請回答所有題目");
+                return;
+            }
+
+            endTime = new Date();
+            const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+            const avgTime = (totalTime / selectedQuestions.length).toFixed(2);
 
             // 檢查答案並計算分數
             let score = 0;
@@ -180,9 +298,13 @@
                 }
             });
 
-            // 顯示分數
+            // 顯示分數和時間
             const scoreDiv = document.getElementById("score");
-            scoreDiv.innerHTML = `你的分數是：${score} / ${selectedQuestions.length}`;
+            scoreDiv.innerHTML = `你的分數是：${score} / ${selectedQuestions.length}<br>
+                                  總用時：${totalTime} 秒，平均每題 ${avgTime} 秒`;
+
+            // 保存成績到 LocalStorage
+            saveHistory(score, selectedQuestions.length, totalTime);
 
             document.getElementById("submitBtn").style.display = "none";
             document.getElementById("continueBtn").style.display = "inline-block";
@@ -190,35 +312,67 @@
 
         // 繼續測驗
         document.getElementById("continueBtn").addEventListener("click", () => {
-            const numQuestions = 50; // 預設值
-            selectedQuestions = getRandomQuestions(numQuestions);
-            renderQuestions(selectedQuestions);
-            document.getElementById("score").innerHTML = "";
-            document.getElementById("submitBtn").style.display = "inline-block";
+            document.querySelector(".progress-bar").style.display = "none";
+            document.querySelector(".pagination").style.display = "none";
+            document.querySelector(".button-group").style.display = "none";
+            document.getElementById("startBtn").style.display = "inline-block";
+            document.querySelector(".input-group").style.display = "block";
             document.getElementById("continueBtn").style.display = "none";
+            document.getElementById("score").innerHTML = "";
+            document.getElementById("questions").innerHTML = "";
+            selectedQuestions = [];
+            answers = {};
+            correctAnswers = {};
             answeredCount = 0;
             updateProgress();
         });
 
-        // 從 JSON 文件讀取題庫
-        async function loadQuestions() {
-            try {
-                const response = await fetch("ERPquestion.json");
-                if (!response.ok) {
-                    throw new Error("無法讀取題庫");
-                }
-                questionBank = await response.json();
-                const numQuestions = 50; // 預設值
-                selectedQuestions = getRandomQuestions(numQuestions);
-                renderQuestions(selectedQuestions);
-                updateProgress();
-            } catch (error) {
-                console.error("讀取題庫失敗：", error);
+        // 分頁控制
+        document.getElementById("prevPageBtn").addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderQuestions();
             }
+        });
+
+        document.getElementById("nextPageBtn").addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderQuestions();
+            }
+        });
+
+        // 保存成績到 LocalStorage
+        function saveHistory(score, total, time) {
+            const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+            const date = new Date().toLocaleString();
+            history.push({
+                date,
+                score: `${score} / ${total}`,
+                time: `${time} 秒`
+            });
+            localStorage.setItem("quizHistory", JSON.stringify(history));
+            renderHistory();
+        }
+
+        // 渲染成績歷史
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+            const historyList = document.getElementById("historyList");
+            historyList.innerHTML = "";
+            history.forEach(record => {
+                const li = document.createElement("li");
+                li.innerText = `${record.date} - 分數：${record.score}，用時：${record.time}`;
+                historyList.appendChild(li);
+            });
         }
 
         // 初始化
-        document.addEventListener("DOMContentLoaded", loadQuestions);
+        document.addEventListener("DOMContentLoaded", () => {
+            loadQuestions();
+            renderHistory();
+            document.getElementById("startBtn").disabled = true;
+        });
     </script>
 </body>
 </html>
