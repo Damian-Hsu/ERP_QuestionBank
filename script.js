@@ -330,6 +330,7 @@ document.getElementById("ageinWrongBtn").addEventListener("click", () => {
 
   window.scrollTo({ top: 0 });
 });
+
 // --------------------------
 // (12) 作答事件
 // --------------------------
