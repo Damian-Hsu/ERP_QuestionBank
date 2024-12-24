@@ -177,11 +177,9 @@
         <ul id="historyList"></ul>
     </div>
 </div>
-<h5>by CYUT IM Jerry Hsu</h5>
+<h5>By CYUT IM Jerry Hsu, </h5>
 <script>
-    // --------------------------
-    // 1. 定義章節與對應題目範圍
-    // --------------------------
+
     const chapters = [
         { name: "第一章 企業資源規劃簡介 (5題)", start: 1, end: 5 },
         { name: "第二章 企業流程管理與ERP (5題)", start: 6, end: 10 },
@@ -201,10 +199,8 @@
         { name: "第十六章 資料庫管理與ERP系統 (15題)", start: 438, end: 452 },
     ];
 
-    // 題庫（示範用，只放幾筆。實際上會讀取 ERPquestion.json）
+   
     let questionBank = {}; 
-
-    // 常數或變數宣告
     let selectedQuestions = [];    // 存放最終選擇出的題目ID
     let answers = {};             // 紀錄使用者作答
     let correctAnswers = {};      // 紀錄正確答案
@@ -213,15 +209,12 @@
     let usedQuestions = [];       // 已使用過的題目（跨次測驗）
     let availableQuestionIDs = [];// 根據所選章節，動態生成可抽取的題目清單
 
-    // DOM元素
+
     const chapterSelectDiv = document.getElementById("chapterSelect");
     const questionCountInput = document.getElementById("questionCount");
     const questionCountLabel = document.getElementById("questionCountLabel");
     const selectAllCheckbox = document.getElementById("selectAll");
 
-    // --------------------------
-    // 2. 建立多選章節清單 (預設全選)
-    // --------------------------
     function createChapterSelection() {
         // 先把「全選」checkbox 放在 HTML 中(程式最上方)
         // 然後我們再動態加入其他章節的選項
@@ -238,9 +231,7 @@
         });
     }
 
-    // --------------------------
-    // 3. 計算所選章節之題號範圍
-    // --------------------------
+
     function updateAvailableQuestionIDs() {
         // 先清空
         availableQuestionIDs = [];
@@ -267,9 +258,6 @@
         questionCountInput.value = totalCount > 0 ? totalCount : 1;
     }
 
-    // --------------------------
-    // 4. 從 JSON 檔讀取題庫
-    // --------------------------
     async function loadQuestions() {
         try {
             const response = await fetch("ERPquestion.json");
@@ -283,9 +271,6 @@
         }
     }
 
-    // --------------------------
-    // 5. 隨機抽題
-    // --------------------------
     function getRandomQuestions(num) {
         // 從可用題庫ID中隨機抽取 num 筆
         const shuffled = availableQuestionIDs.sort(() => Math.random() - 0.5);
@@ -294,9 +279,7 @@
         return selected;
     }
 
-    // --------------------------
-    // 6. 渲染題目
-    // --------------------------
+
     function renderQuestions() {
         const questionsDiv = document.getElementById("questions");
         questionsDiv.innerHTML = "";
@@ -323,9 +306,6 @@
         });
     }
 
-    // --------------------------
-    // 7. 更新進度條
-    // --------------------------
     function updateProgress() {
         const progress = document.querySelector(".progress");
         if (selectedQuestions.length === 0) {
@@ -335,9 +315,7 @@
         progress.style.width = `${(answeredCount / selectedQuestions.length) * 100}%`;
     }
 
-    // --------------------------
-    // 8. 監聽事件：開始測驗
-    // --------------------------
+
     document.getElementById("startBtn").addEventListener("click", () => {
         const numQuestions = parseInt(questionCountInput.value);
 
@@ -379,9 +357,7 @@
         });
     });
 
-    // --------------------------
-    // 9. 監聽選項變化 (作答)
-    // --------------------------
+
     document.addEventListener("change", (e) => {
         if (e.target.matches('input[type="radio"]')) {
             const questionId = e.target.name.replace("q", "");
@@ -391,9 +367,6 @@
         }
     });
 
-    // --------------------------
-    // 10. 提交答案
-    // --------------------------
     document.getElementById("submitBtn").addEventListener("click", () => {
         if (Object.keys(answers).length < selectedQuestions.length) {
             alert("請回答所有題目");
@@ -439,9 +412,7 @@
         document.getElementById("continueBtn").style.display = "inline-block";
     });
 
-    // --------------------------
-    // 11. 繼續測驗
-    // --------------------------
+
     document.getElementById("continueBtn").addEventListener("click", () => {
         // 顯示章節選擇區塊
         chapterSelectDiv.style.display = "block";
@@ -465,9 +436,7 @@
         
     });
 
-    // --------------------------
-    // 12. 儲存/渲染歷史成績
-    // --------------------------
+
     function saveHistory(score, total, time) {
         const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
         const date = new Date().toLocaleString();
@@ -491,9 +460,7 @@
         });
     }
 
-    // --------------------------
-    // 13. 監聽章節選擇變動，動態更新題數範圍
-    // --------------------------
+
     chapterSelectDiv.addEventListener("change", (e) => {
         // 若切換的是「全選」checkbox
         if (e.target.id === "selectAll") {
@@ -507,9 +474,6 @@
         updateAvailableQuestionIDs();
     });
 
-    // --------------------------
-    // 14. 初始化
-    // --------------------------
     document.addEventListener("DOMContentLoaded", () => {
         // 建立章節清單
         createChapterSelection();
