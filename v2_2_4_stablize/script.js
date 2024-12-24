@@ -1,3 +1,6 @@
+// ============ script.js ============
+
+// 全域變數
 let chapters = [];               // 從 chapters_config.json 載入
 let questionBank = {}; 
 let selectedQuestions = [];     // 存放最終選擇出的題目ID
@@ -5,7 +8,7 @@ let answers = {};               // 紀錄使用者作答(key=題目index, val=�
 let correctAnswers = {};        // 紀錄正確答案(key=題目index, val=正解)
 let answeredCount = 0;          // 已回答題數
 let startTime, endTime;         // 計時
-let usedQuestions = [];         // 已使用過的題目（跨次測驗）保留功能，懶得用
+let usedQuestions = [];         // 已使用過的題目（跨次測驗）
 let availableQuestionIDs = [];  // 根據所選章節，動態生成可抽取的題目清單
 
 // 進入回顧頁時紀錄是否來自「錯題回顧」
@@ -221,10 +224,9 @@ document.getElementById("startbtn").addEventListener("click", () => {
     alert(`請輸入 1 ~ ${availableQuestionIDs.length} 之間的數字`);
     return;
   }
-  console.log("numQuestions", numQuestions);
+
   // 抽題
   selectedQuestions = getRandomQuestions(numQuestions);
-  console.log("selectedQuestions", selectedQuestions);
   answers = {};
   correctAnswers = {};
   answeredCount = 0;
@@ -247,50 +249,7 @@ document.getElementById("startbtn").addEventListener("click", () => {
 
   window.scrollTo({ top: 0 });
 });
-document.getElementById("ReCheckWrongBtn").addEventListener("click", () => {
-  console.log("ReCheckWrongBtn click");
 
-  const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-  let wrongMap = {}; // { qid: [ rIndex1, rIndex2, ... ] }
-
-  history.forEach((record, rIndex) => {
-    if (!record.wrongQuestions) return;
-    record.wrongQuestions.forEach(qid => {
-      if (!wrongMap[qid]) wrongMap[qid] = [];
-      wrongMap[qid].push(rIndex);
-    });
-  });
-  // 排序題號
-  let qids = Object.keys(wrongMap)
-                   .map(x => parseInt(x))
-                   .sort((a,b) => a - b);
-  console.log("qids", qids);
-  // 抽題
-  const shuffled = qids.sort(() => Math.random() - 0.5);
-  selectedQuestions = shuffled;
-  console.log("selectedQuestions", shuffled);
-  answers = {};
-  correctAnswers = {};
-  answeredCount = 0;
-  selectedQuestions.forEach((id, index) => {
-    if (questionBank[id]) {
-      correctAnswers[index] = questionBank[id].ans;
-    }
-  });
-
-  showPage(quizPage);
-  renderQuestions();
-  updateProgress();
-  startTime = new Date();
-  scoreDiv.innerHTML = "";
-
-  // 按鈕狀態
-  document.getElementById("submitBtn").style.display   = "inline-block";
-  document.getElementById("continueBtn").style.display = "none";
-  document.getElementById("cancelBtn").style.display = "inline-block";
-
-  window.scrollTo({ top: 0 });
-});
 // --------------------------
 // (12) 作答事件
 // --------------------------
