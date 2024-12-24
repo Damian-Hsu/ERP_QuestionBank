@@ -13,8 +13,13 @@ h1 {
 }
 h5 {
     text-align: center;
+    color: #37488a;
+    margin: 20px 0px 0px 0px;
+}
+h6 {
+    text-align: center;
     color: #98a6dd;
-    margin-top: 20px;
+    margin-top: 2px;
 }
 .container {
     width: 90%;
@@ -88,7 +93,7 @@ h5 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin: 10px 2px;
+    margin: 5px 2px;
 }
 
 .button:hover {
@@ -114,7 +119,7 @@ h5 {
 }
 
 .history {
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .history h2 {
@@ -123,7 +128,7 @@ h5 {
 
 .input-group {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .input-group input {
@@ -139,14 +144,18 @@ h5 {
 
 /* 章節多選清單 */
 .chapter-select {
-    margin-top: 20px;
-    max-height: 500px;
+    
     overflow-y: auto;
+    /*
+    margin-top: 10px;
+    max-height: 500px;
     border: 1px solid #ccc;
+    width: 97%;
+    */
     padding: 10px;
     text-align: left;
     display: inline-block;
-    width: 97%;
+    
 }
 
 .chapter-select label {
