@@ -245,6 +245,7 @@ document.getElementById("startbtn").addEventListener("click", () => {
   // 按鈕狀態
   document.getElementById("submitBtn").style.display   = "inline-block";
   document.getElementById("continueBtn").style.display = "none";
+  document.getElementById("cancelBtn").style.display = "inline-block";
 
   window.scrollTo({ top: 0 });
 });
@@ -314,6 +315,7 @@ document.getElementById("submitBtn").addEventListener("click", () => {
 
   // 按鈕狀態
   document.getElementById("submitBtn").style.display   = "none";
+  document.getElementById("cancelBtn").style.display = "none";
   document.getElementById("continueBtn").style.display = "inline-block";
 });
 
@@ -321,6 +323,20 @@ document.getElementById("submitBtn").addEventListener("click", () => {
 // (14) 繼續 (返回主頁)
 // --------------------------
 document.getElementById("continueBtn").addEventListener("click", () => {
+  showPage(mainPage);
+  questionsDiv.innerHTML = "";
+  scoreDiv.innerHTML = "";
+  selectedQuestions = [];
+  answers = {};
+  correctAnswers = {};
+  answeredCount = 0;
+  updateProgress();
+  window.scrollTo({ top: 0 });
+});
+// --------------------------
+// (14-2) 取消 (返回主頁)
+// --------------------------
+document.getElementById("cancelBtn").addEventListener("click", () => {
   showPage(mainPage);
   questionsDiv.innerHTML = "";
   scoreDiv.innerHTML = "";
