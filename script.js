@@ -7,7 +7,7 @@ let answeredCount = 0;          // 已回答題數
 let startTime, endTime;         // 計時
 let usedQuestions = [];         // 已使用過的題目（跨次測驗）保留功能，懶得用
 let availableQuestionIDs = [];  // 根據所選章節，動態生成可抽取的題目清單
-
+let now_history_object = {};    // 紀錄目前瀏覽的歷史紀錄
 // 進入回顧頁時紀錄是否來自「錯題回顧」
 let reviewFromAllWrong = false; 
 
@@ -247,6 +247,9 @@ document.getElementById("startbtn").addEventListener("click", () => {
 
   window.scrollTo({ top: 0 });
 });
+// --------------------------
+// (11) 錯誤題目練習按鈕
+// --------------------------
 document.getElementById("ReCheckWrongBtn").addEventListener("click", () => {
   console.log("ReCheckWrongBtn click");
 
@@ -278,6 +281,42 @@ document.getElementById("ReCheckWrongBtn").addEventListener("click", () => {
     }
   });
 
+  showPage(quizPage);
+  renderQuestions();
+  updateProgress();
+  startTime = new Date();
+  scoreDiv.innerHTML = "";
+
+  // 按鈕狀態
+  document.getElementById("submitBtn").style.display   = "inline-block";
+  document.getElementById("continueBtn").style.display = "none";
+  document.getElementById("cancelBtn").style.display = "inline-block";
+
+  window.scrollTo({ top: 0 });
+});
+// --------------------------
+// (11) 回顧>再試一次按鈕
+// --------------------------
+document.getElementById("ageinWrongBtn").addEventListener("click", () => {
+  console.log("ageinWrongBtn click");
+  const { questions } = now_history_object;
+  let qValues = Object.values(questions)
+  // 排序題號
+  let qids = qValues.map(x => parseInt(x)).sort((a, b) => a - b);
+  console.log("qids", qids);
+  // 抽題
+  const shuffled = qids.sort(() => Math.random() - 0.5);
+  selectedQuestions = shuffled;
+  console.log("selectedQuestions", shuffled);
+  answers = {};
+  correctAnswers = {};
+  answeredCount = 0;
+  selectedQuestions.forEach((id, index) => {
+    if (questionBank[id]) {
+      correctAnswers[index] = questionBank[id].ans;
+    }
+  });
+  now_history_object = {}; // 清空
   showPage(quizPage);
   renderQuestions();
   updateProgress();
@@ -612,9 +651,12 @@ function renderHistory() {
     btnReview.className = "button button-inline";
     btnReview.textContent = "回顧";
     btnReview.addEventListener("click", () => {
+      console.log("回顧", rec);
+      now_history_object = rec;
       reviewFromAllWrong = false;
       setTempHistoryRecord(rec);
       showReviewPage(rec);
+      
     });
 
     const btnDelete = document.createElement("button");
