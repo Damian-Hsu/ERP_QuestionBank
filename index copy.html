@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP題庫測驗系統</title>
+    <style>
+        /* 基本樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3b5998;
+            margin-top: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e6e6e6;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #3b5998;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            margin: 20px 0;
+        }
+
+        .options {
+            margin: 10px 0;
+        }
+
+        .options label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #3b5998;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .button:hover {
+            background-color: #2a4274;
+        }
+
+        .incorrect {
+            background-color: #f8d7da;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .correct-answer {
+            color: green;
+            font-weight: bold;
+        }
+
+        .score {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .history {
+            margin-top: 40px;
+        }
+
+        .history h2 {
+            color: #3b5998;
+        }
+
+        .input-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .input-group input {
+            width: 60px;
+            padding: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .input-group .button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>測驗系統</h1>
+    <div class="container">
+        <div class="input-group">
+            <label for="questionCount">請輸入題數（10-452）：</label>
+            <input type="number" id="questionCount" min="10" max="452" value="50">
+            <button class="button" id="startBtn">開始測驗</button>
+        </div>
+
+        <div class="progress-bar" style="display: none;">
+            <div class="progress"></div>
+        </div>
+        <div id="questions"></div>
+
+        <div class="button-group" style="display: none;">
+            <button class="button" id="submitBtn">繳交</button>
+            <button class="button" id="continueBtn" style="display: none;">繼續</button>
+        </div>
+        <div class="score" id="score"></div>
+
+        <div class="history">
+            <h2>測驗歷史</h2>
+            <ul id="historyList"></ul>
+        </div>
+    </div>
+
+    <script>
+        let questionBank = {};
+        const maxQuestions = 452;
+        const minQuestions = 10;
+        let selectedQuestions = [];
+        let answers = {};
+        let correctAnswers = {};
+        let answeredCount = 0;
+        let startTime, endTime;
+        let usedQuestions = []; // 防止重複的題目
+
+        // 從 JSON 文件讀取題庫
+        async function loadQuestions() {
+            try {
+                const response = await fetch("ERPquestion.json");
+                if (!response.ok) {
+                    throw new Error("無法讀取題庫");
+                }
+                questionBank = await response.json();
+                document.getElementById("startBtn").disabled = false;
+            } catch (error) {
+                console.error("讀取題庫失敗：", error);
+            }
+        }
+
+        // 隨機抽題
+        function getRandomQuestions(num) {
+            const keys = Object.keys(questionBank).filter(key => !usedQuestions.includes(key));
+            const shuffled = keys.sort(() => Math.random() - 0.5);
+            const selected = shuffled.slice(0, num);
+            usedQuestions = usedQuestions.concat(selected);
+            return selected;
+        }
+
+        // 渲染題目
+        function renderQuestions() {
+            const questionsDiv = document.getElementById("questions");
+            questionsDiv.innerHTML = "";
+
+            selectedQuestions.forEach((id, index) => {
+                const q = questionBank[id];
+                const userAnswer = answers[index] || '';
+
+                const questionDiv = document.createElement("div");
+                questionDiv.className = "question";
+                questionDiv.id = `q${index}`;
+
+                questionDiv.innerHTML = `
+                    <p><strong>${index + 1}. ${q.question}</strong></p>
+                    <div class="options">
+                        <label><input type="radio" name="q${index}" value="A" ${userAnswer === 'A' ? 'checked' : ''}> A. ${q.A}</label>
+                        <label><input type="radio" name="q${index}" value="B" ${userAnswer === 'B' ? 'checked' : ''}> B. ${q.B}</label>
+                        <label><input type="radio" name="q${index}" value="C" ${userAnswer === 'C' ? 'checked' : ''}> C. ${q.C}</label>
+                        <label><input type="radio" name="q${index}" value="D" ${userAnswer === 'D' ? 'checked' : ''}> D. ${q.D}</label>
+                    </div>
+                `;
+                questionsDiv.appendChild(questionDiv);
+            });
+        }
+
+        // 更新進度條
+        function updateProgress() {
+            const progress = document.querySelector(".progress");
+            progress.style.width = `${(answeredCount / selectedQuestions.length) * 100}%`;
+        }
+
+        // 開始測驗
+        document.getElementById("startBtn").addEventListener("click", () => {
+            const numInput = document.getElementById("questionCount");
+            let numQuestions = parseInt(numInput.value);
+            if (isNaN(numQuestions) || numQuestions < minQuestions || numQuestions > maxQuestions) {
+                alert(`請輸入 ${minQuestions} 到 ${maxQuestions} 之間的數字`);
+                return;
+            }
+            selectedQuestions = getRandomQuestions(numQuestions);
+            answers = {};
+            correctAnswers = {};
+            answeredCount = 0;
+
+            selectedQuestions.forEach((id, index) => {
+                correctAnswers[index] = questionBank[id].ans;
+            });
+
+            renderQuestions();
+            updateProgress();
+            startTime = new Date();
+
+            // 顯示相關區域
+            document.querySelector(".progress-bar").style.display = "block";
+            document.querySelector(".button-group").style.display = "block";
+            document.getElementById("startBtn").style.display = "none";
+            document.querySelector(".input-group").style.display = "none";
+            document.getElementById("score").innerHTML = "";
+        });
+
+        // 監聽選項變化
+        document.addEventListener("change", (e) => {
+            if (e.target.matches('input[type="radio"]')) {
+                const questionId = e.target.name.replace("q", "");
+                answers[questionId] = e.target.value;
+                answeredCount = Object.keys(answers).length;
+                updateProgress();
+            }
+        });
+
+        // 提交答案
+        document.getElementById("submitBtn").addEventListener("click", () => {
+            if (Object.keys(answers).length < selectedQuestions.length) {
+                alert("請回答所有題目");
+                return;
+            }
+
+            endTime = new Date();
+            const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+            const avgTime = (totalTime / selectedQuestions.length).toFixed(2);
+
+            // 檢查答案並計算分數
+            let score = 0;
+            selectedQuestions.forEach((id, index) => {
+                const questionDiv = document.getElementById(`q${index}`);
+                const userAnswer = answers[index];
+                const correctAnswer = correctAnswers[index];
+
+                if (userAnswer === correctAnswer) {
+                    score++;
+                } else {
+                    questionDiv.classList.add("incorrect");
+
+                    // 標記正確答案為綠色
+                    const options = questionDiv.querySelectorAll(".options label");
+                    options.forEach(label => {
+                        const input = label.querySelector('input');
+                        if (input.value === correctAnswer) {
+                            label.classList.add("correct-answer");
+                        }
+                    });
+                }
+            });
+
+            // 顯示分數和時間
+            const scoreDiv = document.getElementById("score");
+            scoreDiv.innerHTML = `你的分數是：${score} / ${selectedQuestions.length}<br>
+                                  總用時：${totalTime} 秒，平均每題 ${avgTime} 秒`;
+
+            // 保存成績到 LocalStorage
+            saveHistory(score, selectedQuestions.length, totalTime);
+
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("continueBtn").style.display = "inline-block";
+        });
+
+        // 繼續測驗
+        document.getElementById("continueBtn").addEventListener("click", () => {
+            document.querySelector(".progress-bar").style.display = "none";
+            document.querySelector(".button-group").style.display = "none";
+            document.getElementById("startBtn").style.display = "inline-block";
+            document.querySelector(".input-group").style.display = "block";
+            document.getElementById("continueBtn").style.display = "none";
+            document.getElementById("submitBtn").style.display = "inline-block";
+            document.getElementById("score").innerHTML = "";
+            document.getElementById("questions").innerHTML = "";
+            selectedQuestions = [];
+            answers = {};
+            correctAnswers = {};
+            answeredCount = 0;
+            updateProgress();
+        });
+
+        // 保存成績到 LocalStorage
+        function saveHistory(score, total, time) {
+            const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+            const date = new Date().toLocaleString();
+            history.push({
+                date,
+                score: `${score} / ${total}`,
+                time: `${time} 秒`
+            });
+            localStorage.setItem("quizHistory", JSON.stringify(history));
+            renderHistory();
+        }
+
+        // 渲染成績歷史
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+            const historyList = document.getElementById("historyList");
+            historyList.innerHTML = "";
+            history.forEach(record => {
+                const li = document.createElement("li");
+                li.innerText = `${record.date} - 分數：${record.score}，用時：${record.time}`;
+                historyList.appendChild(li);
+            });
+        }
+
+        // 初始化
+        document.addEventListener("DOMContentLoaded", () => {
+            loadQuestions();
+            renderHistory();
+            document.getElementById("startBtn").disabled = true;
+        });
+    </script>
+</body>
+</html>

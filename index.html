@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>測驗系統</title>
+    <title>ERP題庫測驗系統</title>
     <style>
         /* 基本樣式 */
         body {
@@ -18,7 +18,11 @@
             color: #3b5998;
             margin-top: 20px;
         }
-
+        h5 {
+            text-align: center;
+            color: #98a6dd;
+            margin-top: 20px;
+        }
         .container {
             width: 90%;
             max-width: 800px;
@@ -119,233 +123,405 @@
         .input-group .button {
             margin-left: 10px;
         }
+
+        /* 章節多選清單 */
+        .chapter-select {
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            display: inline-block;
+            width: 97%;
+        }
+
+        .chapter-select label {
+            display: block;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
-    <h1>測驗系統</h1>
-    <div class="container">
-        <div class="input-group">
-            <label for="questionCount">請輸入題數（10-452）：</label>
-            <input type="number" id="questionCount" min="10" max="452" value="50">
-            <button class="button" id="startBtn">開始測驗</button>
-        </div>
+<h1>ERP測驗系統</h1>
 
-        <div class="progress-bar" style="display: none;">
-            <div class="progress"></div>
-        </div>
-        <div id="questions"></div>
-
-        <div class="button-group" style="display: none;">
-            <button class="button" id="submitBtn">繳交</button>
-            <button class="button" id="continueBtn" style="display: none;">繼續</button>
-        </div>
-        <div class="score" id="score"></div>
-
-        <div class="history">
-            <h2>測驗歷史</h2>
-            <ul id="historyList"></ul>
-        </div>
+<div class="container">
+    <!-- 多選章節區塊 -->
+    <div class="chapter-select" id="chapterSelect">
+        <!-- 1) 新增「全選」checkbox（不放入 chapters） -->
+        <label>
+            <input type="checkbox" id="selectAll" checked>
+            全選
+        </label>
     </div>
 
-    <script>
-        let questionBank = {};
-        const maxQuestions = 452;
-        const minQuestions = 10;
-        let selectedQuestions = [];
-        let answers = {};
-        let correctAnswers = {};
-        let answeredCount = 0;
-        let startTime, endTime;
-        let usedQuestions = []; // 防止重複的題目
+    <div class="input-group">
+        <label for="questionCount" id="questionCountLabel">請輸入題數（1-452）：</label>
+        <input type="number" id="questionCount" min="1" max="452" value="50">
+        <button class="button" id="startBtn">開始測驗</button>
+    </div>
 
-        // 從 JSON 文件讀取題庫
-        async function loadQuestions() {
-            try {
-                const response = await fetch("ERPquestion.json");
-                if (!response.ok) {
-                    throw new Error("無法讀取題庫");
-                }
-                questionBank = await response.json();
-                document.getElementById("startBtn").disabled = false;
-            } catch (error) {
-                console.error("讀取題庫失敗：", error);
+    <div class="progress-bar" style="display: none;">
+        <div class="progress"></div>
+    </div>
+    <div id="questions"></div>
+
+    <div class="button-group" style="display: none;">
+        <button class="button" id="submitBtn">繳交</button>
+        <button class="button" id="continueBtn" style="display: none;">繼續</button>
+    </div>
+    <div class="score" id="score"></div>
+
+    <div class="history">
+        <h2>測驗歷史</h2>
+        <ul id="historyList"></ul>
+    </div>
+</div>
+<h5>by CYUT IM Jerry Hsu</h5>
+<script>
+    // --------------------------
+    // 1. 定義章節與對應題目範圍
+    // --------------------------
+    const chapters = [
+        { name: "第一章 企業資源規劃簡介 (5題)", start: 1, end: 5 },
+        { name: "第二章 企業流程管理與ERP (5題)", start: 6, end: 10 },
+        { name: "第三章 銷售與配銷模組 (66題)", start: 11, end: 76 },
+        { name: "第四章 生產規劃與控制 (55題)", start: 77, end: 131 },
+        { name: "第五章 企業之採購管理 (49題)", start: 132, end: 180 },
+        { name: "第六章 庫存管理系統 (84題)", start: 181, end: 264 },
+        { name: "第七章 ERP財務會計模組 (42題)", start: 265, end: 306 },
+        { name: "第八章 成本控制模組 (49題)", start: 307, end: 355 },
+        { name: "第九章 人力資源模組 (32題)", start: 356, end: 387 },
+        { name: "第十章 系統評選 (5題)", start: 388, end: 392 },
+        { name: "第十一章 系統導入 (5題)", start: 393, end: 397 },
+        { name: "第十二章 ERP系統導入的兩個案例 (5題)", start: 398, end: 402 },
+        { name: "第十三章 從ERP到企業數位轉型 (5題)", start: 403, end: 407 },
+        { name: "第十四章 企業雲端運算與應用 (25題)", start: 408, end: 432 },
+        { name: "第十五章 跨章節 (5題)", start: 433, end: 437 },
+        { name: "第十六章 資料庫管理與ERP系統 (15題)", start: 438, end: 452 },
+    ];
+
+    // 題庫（示範用，只放幾筆。實際上會讀取 ERPquestion.json）
+    let questionBank = {}; 
+
+    // 常數或變數宣告
+    let selectedQuestions = [];    // 存放最終選擇出的題目ID
+    let answers = {};             // 紀錄使用者作答
+    let correctAnswers = {};      // 紀錄正確答案
+    let answeredCount = 0;        // 已回答題數
+    let startTime, endTime;       // 計時
+    let usedQuestions = [];       // 已使用過的題目（跨次測驗）
+    let availableQuestionIDs = [];// 根據所選章節，動態生成可抽取的題目清單
+
+    // DOM元素
+    const chapterSelectDiv = document.getElementById("chapterSelect");
+    const questionCountInput = document.getElementById("questionCount");
+    const questionCountLabel = document.getElementById("questionCountLabel");
+    const selectAllCheckbox = document.getElementById("selectAll");
+
+    // --------------------------
+    // 2. 建立多選章節清單 (預設全選)
+    // --------------------------
+    function createChapterSelection() {
+        // 先把「全選」checkbox 放在 HTML 中(程式最上方)
+        // 然後我們再動態加入其他章節的選項
+        chapters.forEach((chap, idx) => {
+            const label = document.createElement("label");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = idx;
+            checkbox.checked = true; // 預設全選
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(chap.name));
+            chapterSelectDiv.appendChild(label);
+        });
+    }
+
+    // --------------------------
+    // 3. 計算所選章節之題號範圍
+    // --------------------------
+    function updateAvailableQuestionIDs() {
+        // 先清空
+        availableQuestionIDs = [];
+        // 取得所有勾選的章節(不含「全選」)
+        const checkboxes = chapterSelectDiv.querySelectorAll("input[type='checkbox']:not(#selectAll):checked");
+
+        checkboxes.forEach(chk => {
+            const idx = parseInt(chk.value);
+            const chap = chapters[idx];
+            // 將該章節範圍的ID都加入 availableQuestionIDs
+            for (let i = chap.start; i <= chap.end; i++) {
+                // 若尚未被使用過，可視需求排除 usedQuestions。此範例不排除
+                availableQuestionIDs.push(i.toString());
             }
-        }
+        });
 
-        // 隨機抽題
-        function getRandomQuestions(num) {
-            const keys = Object.keys(questionBank).filter(key => !usedQuestions.includes(key));
-            const shuffled = keys.sort(() => Math.random() - 0.5);
-            const selected = shuffled.slice(0, num);
-            usedQuestions = usedQuestions.concat(selected);
-            return selected;
-        }
+        // 更新題數輸入框的 min/max/value
+        const totalCount = availableQuestionIDs.length;
+        questionCountInput.min = 1;
+        questionCountInput.max = totalCount > 0 ? totalCount : 1; // 若全取消，避免 max=0 時出錯
+        questionCountLabel.textContent = `請輸入題數（1-${totalCount}）：`;
 
-        // 渲染題目
-        function renderQuestions() {
-            const questionsDiv = document.getElementById("questions");
-            questionsDiv.innerHTML = "";
+        // 預設值改為所選章節題數加總（若全取消則給 1）
+        questionCountInput.value = totalCount > 0 ? totalCount : 1;
+    }
 
-            selectedQuestions.forEach((id, index) => {
-                const q = questionBank[id];
-                const userAnswer = answers[index] || '';
-
-                const questionDiv = document.createElement("div");
-                questionDiv.className = "question";
-                questionDiv.id = `q${index}`;
-
-                questionDiv.innerHTML = `
-                    <p><strong>${index + 1}. ${q.question}</strong></p>
-                    <div class="options">
-                        <label><input type="radio" name="q${index}" value="A" ${userAnswer === 'A' ? 'checked' : ''}> A. ${q.A}</label>
-                        <label><input type="radio" name="q${index}" value="B" ${userAnswer === 'B' ? 'checked' : ''}> B. ${q.B}</label>
-                        <label><input type="radio" name="q${index}" value="C" ${userAnswer === 'C' ? 'checked' : ''}> C. ${q.C}</label>
-                        <label><input type="radio" name="q${index}" value="D" ${userAnswer === 'D' ? 'checked' : ''}> D. ${q.D}</label>
-                    </div>
-                `;
-                questionsDiv.appendChild(questionDiv);
-            });
-        }
-
-        // 更新進度條
-        function updateProgress() {
-            const progress = document.querySelector(".progress");
-            progress.style.width = `${(answeredCount / selectedQuestions.length) * 100}%`;
-        }
-
-        // 開始測驗
-        document.getElementById("startBtn").addEventListener("click", () => {
-            const numInput = document.getElementById("questionCount");
-            let numQuestions = parseInt(numInput.value);
-            if (isNaN(numQuestions) || numQuestions < minQuestions || numQuestions > maxQuestions) {
-                alert(`請輸入 ${minQuestions} 到 ${maxQuestions} 之間的數字`);
-                return;
+    // --------------------------
+    // 4. 從 JSON 檔讀取題庫
+    // --------------------------
+    async function loadQuestions() {
+        try {
+            const response = await fetch("ERPquestion.json");
+            if (!response.ok) {
+                throw new Error("無法讀取題庫");
             }
-            selectedQuestions = getRandomQuestions(numQuestions);
-            answers = {};
-            correctAnswers = {};
-            answeredCount = 0;
+            questionBank = await response.json();
+            document.getElementById("startBtn").disabled = false;
+        } catch (error) {
+            console.error("讀取題庫失敗：", error);
+        }
+    }
 
-            selectedQuestions.forEach((id, index) => {
+    // --------------------------
+    // 5. 隨機抽題
+    // --------------------------
+    function getRandomQuestions(num) {
+        // 從可用題庫ID中隨機抽取 num 筆
+        const shuffled = availableQuestionIDs.sort(() => Math.random() - 0.5);
+        const selected = shuffled.slice(0, num);
+        usedQuestions = usedQuestions.concat(selected); 
+        return selected;
+    }
+
+    // --------------------------
+    // 6. 渲染題目
+    // --------------------------
+    function renderQuestions() {
+        const questionsDiv = document.getElementById("questions");
+        questionsDiv.innerHTML = "";
+
+        selectedQuestions.forEach((id, index) => {
+            const q = questionBank[id];
+            if (!q) return;
+
+            const userAnswer = answers[index] || '';
+
+            const questionDiv = document.createElement("div");
+            questionDiv.className = "question";
+            questionDiv.id = "q" + index;
+
+            questionDiv.innerHTML =
+                `<p><strong>${index + 1}. ${q.question}</strong></p>
+                 <div class="options">
+                     <label><input type="radio" name="q${index}" value="A" ${userAnswer === 'A' ? 'checked' : ''}> A. ${q.A}</label>
+                     <label><input type="radio" name="q${index}" value="B" ${userAnswer === 'B' ? 'checked' : ''}> B. ${q.B}</label>
+                     <label><input type="radio" name="q${index}" value="C" ${userAnswer === 'C' ? 'checked' : ''}> C. ${q.C}</label>
+                     <label><input type="radio" name="q${index}" value="D" ${userAnswer === 'D' ? 'checked' : ''}> D. ${q.D}</label>
+                 </div>`;
+            questionsDiv.appendChild(questionDiv);
+        });
+    }
+
+    // --------------------------
+    // 7. 更新進度條
+    // --------------------------
+    function updateProgress() {
+        const progress = document.querySelector(".progress");
+        if (selectedQuestions.length === 0) {
+            progress.style.width = '0%';
+            return;
+        }
+        progress.style.width = `${(answeredCount / selectedQuestions.length) * 100}%`;
+    }
+
+    // --------------------------
+    // 8. 監聽事件：開始測驗
+    // --------------------------
+    document.getElementById("startBtn").addEventListener("click", () => {
+        const numQuestions = parseInt(questionCountInput.value);
+
+        // 驗證輸入
+        if (isNaN(numQuestions) || numQuestions < 1 || numQuestions > availableQuestionIDs.length) {
+            alert(`請輸入 1 ~ ${availableQuestionIDs.length} 之間的數字`);
+            return;
+        }
+
+        // 開始抽題
+        selectedQuestions = getRandomQuestions(numQuestions);
+        answers = {};
+        correctAnswers = {};
+        answeredCount = 0;
+
+        // 建立正確答案列表
+        selectedQuestions.forEach((id, index) => {
+            if (questionBank[id]) {
                 correctAnswers[index] = questionBank[id].ans;
-            });
-
-            renderQuestions();
-            updateProgress();
-            startTime = new Date();
-
-            // 顯示相關區域
-            document.querySelector(".progress-bar").style.display = "block";
-            document.querySelector(".button-group").style.display = "block";
-            document.getElementById("startBtn").style.display = "none";
-            document.querySelector(".input-group").style.display = "none";
-            document.getElementById("score").innerHTML = "";
-        });
-
-        // 監聽選項變化
-        document.addEventListener("change", (e) => {
-            if (e.target.matches('input[type="radio"]')) {
-                const questionId = e.target.name.replace("q", "");
-                answers[questionId] = e.target.value;
-                answeredCount = Object.keys(answers).length;
-                updateProgress();
             }
         });
 
-        // 提交答案
-        document.getElementById("submitBtn").addEventListener("click", () => {
-            if (Object.keys(answers).length < selectedQuestions.length) {
-                alert("請回答所有題目");
-                return;
-            }
+        // 隱藏章節選擇區塊
+        chapterSelectDiv.style.display = "none";
 
-            endTime = new Date();
-            const totalTime = ((endTime - startTime) / 1000).toFixed(2);
-            const avgTime = (totalTime / selectedQuestions.length).toFixed(2);
+        // 渲染題目、更新進度條
+        renderQuestions();
+        updateProgress();
+        startTime = new Date();
 
-            // 檢查答案並計算分數
-            let score = 0;
-            selectedQuestions.forEach((id, index) => {
-                const questionDiv = document.getElementById(`q${index}`);
-                const userAnswer = answers[index];
-                const correctAnswer = correctAnswers[index];
-
-                if (userAnswer === correctAnswer) {
-                    score++;
-                } else {
-                    questionDiv.classList.add("incorrect");
-
-                    // 標記正確答案為綠色
-                    const options = questionDiv.querySelectorAll(".options label");
-                    options.forEach(label => {
-                        const input = label.querySelector('input');
-                        if (input.value === correctAnswer) {
-                            label.classList.add("correct-answer");
-                        }
-                    });
-                }
-            });
-
-            // 顯示分數和時間
-            const scoreDiv = document.getElementById("score");
-            scoreDiv.innerHTML = `你的分數是：${score} / ${selectedQuestions.length}<br>
-                                  總用時：${totalTime} 秒，平均每題 ${avgTime} 秒`;
-
-            // 保存成績到 LocalStorage
-            saveHistory(score, selectedQuestions.length, totalTime);
-
-            document.getElementById("submitBtn").style.display = "none";
-            document.getElementById("continueBtn").style.display = "inline-block";
+        // 顯示相關區域
+        document.querySelector(".progress-bar").style.display = "block";
+        document.querySelector(".button-group").style.display = "block";
+        document.getElementById("startBtn").style.display = "none";
+        document.querySelector(".input-group").style.display = "none";
+        document.getElementById("score").innerHTML = "";
+        window.scrollTo({
+            top: 0,       // 回到頁面頂部 
         });
+    });
 
-        // 繼續測驗
-        document.getElementById("continueBtn").addEventListener("click", () => {
-            document.querySelector(".progress-bar").style.display = "none";
-            document.querySelector(".button-group").style.display = "none";
-            document.getElementById("startBtn").style.display = "inline-block";
-            document.querySelector(".input-group").style.display = "block";
-            document.getElementById("continueBtn").style.display = "none";
-            document.getElementById("submitBtn").style.display = "inline-block";
-            document.getElementById("score").innerHTML = "";
-            document.getElementById("questions").innerHTML = "";
-            selectedQuestions = [];
-            answers = {};
-            correctAnswers = {};
-            answeredCount = 0;
+    // --------------------------
+    // 9. 監聽選項變化 (作答)
+    // --------------------------
+    document.addEventListener("change", (e) => {
+        if (e.target.matches('input[type="radio"]')) {
+            const questionId = e.target.name.replace("q", "");
+            answers[questionId] = e.target.value;
+            answeredCount = Object.keys(answers).length;
             updateProgress();
+        }
+    });
+
+    // --------------------------
+    // 10. 提交答案
+    // --------------------------
+    document.getElementById("submitBtn").addEventListener("click", () => {
+        if (Object.keys(answers).length < selectedQuestions.length) {
+            alert("請回答所有題目");
+            return;
+        }
+
+        endTime = new Date();
+        const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+        const avgTime = (totalTime / selectedQuestions.length).toFixed(2);
+
+        // 檢查答案並計算分數
+        let score = 0;
+        selectedQuestions.forEach((id, index) => {
+            const questionDiv = document.getElementById("q" + index);
+            const userAnswer = answers[index];
+            const correctAnswer = correctAnswers[index];
+
+            if (userAnswer === correctAnswer) {
+                score++;
+            } else {
+                questionDiv.classList.add("incorrect");
+                // 標記正確答案
+                const options = questionDiv.querySelectorAll(".options label");
+                options.forEach(label => {
+                    const input = label.querySelector('input');
+                    if (input.value === correctAnswer) {
+                        label.classList.add("correct-answer");
+                    }
+                });
+            }
         });
+
+        // 顯示分數和時間
+        const scoreDiv = document.getElementById("score");
+        scoreDiv.innerHTML = `你的分數是：${score} / ${selectedQuestions.length}<br>
+                              總用時：${totalTime} 秒，平均每題 ${avgTime} 秒`;
 
         // 保存成績到 LocalStorage
-        function saveHistory(score, total, time) {
-            const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-            const date = new Date().toLocaleString();
-            history.push({
-                date,
-                score: `${score} / ${total}`,
-                time: `${time} 秒`
-            });
-            localStorage.setItem("quizHistory", JSON.stringify(history));
-            renderHistory();
-        }
+        saveHistory(score, selectedQuestions.length, totalTime);
 
-        // 渲染成績歷史
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-            const historyList = document.getElementById("historyList");
-            historyList.innerHTML = "";
-            history.forEach(record => {
-                const li = document.createElement("li");
-                li.innerText = `${record.date} - 分數：${record.score}，用時：${record.time}`;
-                historyList.appendChild(li);
-            });
-        }
+        // 隱藏提交按鈕，顯示繼續按鈕
+        document.getElementById("submitBtn").style.display = "none";
+        document.getElementById("continueBtn").style.display = "inline-block";
+    });
 
-        // 初始化
-        document.addEventListener("DOMContentLoaded", () => {
-            loadQuestions();
-            renderHistory();
-            document.getElementById("startBtn").disabled = true;
+    // --------------------------
+    // 11. 繼續測驗
+    // --------------------------
+    document.getElementById("continueBtn").addEventListener("click", () => {
+        // 顯示章節選擇區塊
+        chapterSelectDiv.style.display = "block";
+
+        document.querySelector(".progress-bar").style.display = "none";
+        document.querySelector(".button-group").style.display = "none";
+        document.getElementById("startBtn").style.display = "inline-block";
+        document.querySelector(".input-group").style.display = "block";
+        document.getElementById("continueBtn").style.display = "none";
+        document.getElementById("submitBtn").style.display = "inline-block";
+        document.getElementById("score").innerHTML = "";
+        document.getElementById("questions").innerHTML = "";
+        window.scrollTo({
+            top: 0,       // 回到頁面頂部 
         });
-    </script>
+        selectedQuestions = [];
+        answers = {};
+        correctAnswers = {};
+        answeredCount = 0;
+        updateProgress();
+        
+    });
+
+    // --------------------------
+    // 12. 儲存/渲染歷史成績
+    // --------------------------
+    function saveHistory(score, total, time) {
+        const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+        const date = new Date().toLocaleString();
+        history.push({
+            date,
+            score: `${score} / ${total}`,
+            time: `${time} 秒`
+        });
+        localStorage.setItem("quizHistory", JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+        const historyList = document.getElementById("historyList");
+        historyList.innerHTML = "";
+        history.forEach(record => {
+            const li = document.createElement("li");
+            li.innerText = `${record.date} - 分數：${record.score}，用時：${record.time}`;
+            historyList.appendChild(li);
+        });
+    }
+
+    // --------------------------
+    // 13. 監聽章節選擇變動，動態更新題數範圍
+    // --------------------------
+    chapterSelectDiv.addEventListener("change", (e) => {
+        // 若切換的是「全選」checkbox
+        if (e.target.id === "selectAll") {
+            const isChecked = e.target.checked;
+            // 取出所有章節的 checkbox (排除全選本身)
+            const chapterCheckboxes = chapterSelectDiv.querySelectorAll("input[type='checkbox']:not(#selectAll)");
+            chapterCheckboxes.forEach(cb => {
+                cb.checked = isChecked;
+            });
+        }
+        updateAvailableQuestionIDs();
+    });
+
+    // --------------------------
+    // 14. 初始化
+    // --------------------------
+    document.addEventListener("DOMContentLoaded", () => {
+        // 建立章節清單
+        createChapterSelection();
+        // 讀取題庫
+        loadQuestions();
+        // 更新可用題號與題數範圍
+        updateAvailableQuestionIDs();
+        // 渲染歷史記錄
+        renderHistory();
+        // 預設按鈕先禁用，等題庫載入完再啟用
+        document.getElementById("startBtn").disabled = true;
+    });
+</script>
 </body>
 </html>
