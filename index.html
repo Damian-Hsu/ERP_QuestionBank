@@ -75,7 +75,16 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 0 10px;
+            margin: 10px 2px;
+        }
+        .button_qc {
+            padding: 10px 20px;
+            background-color: #dfe1e7;
+            color: #3b5998;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 2px;
         }
 
         .button:hover {
@@ -158,6 +167,10 @@
     <div class="input-group">
         <label for="questionCount" id="questionCountLabel">請輸入題數（1-452）：</label>
         <input type="number" id="questionCount" min="1" max="452" value="50">
+        <button class="button_qc" id="qc_10">10</button>
+        <button class="button_qc" id="qc_50">50</button>
+        <button class="button_qc" id="qc_100">100</button>
+        <br>
         <button class="button" id="startBtn">開始測驗</button>
     </div>
 
@@ -314,8 +327,15 @@
         }
         progress.style.width = `${(answeredCount / selectedQuestions.length) * 100}%`;
     }
-
-
+    document.getElementById("qc_10").addEventListener("click", () => {
+        questionCountInput.value = 10;
+    });
+    document.getElementById("qc_50").addEventListener("click", () => {
+        questionCountInput.value = 50;
+    });
+    document.getElementById("qc_100").addEventListener("click", () => {
+        questionCountInput.value = 100;
+    });
     document.getElementById("startBtn").addEventListener("click", () => {
         const numQuestions = parseInt(questionCountInput.value);
 
