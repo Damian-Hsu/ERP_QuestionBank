@@ -1,0 +1,180 @@
+/* 基本樣式 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #3b5998;
+    margin-top: 20px;
+}
+h5 {
+    text-align: center;
+    color: #98a6dd;
+    margin-top: 20px;
+}
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #e6e6e6;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress {
+    height: 20px;
+    background-color: #3b5998;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.question {
+    margin: 20px 0;
+}
+
+.options {
+    margin: 10px 0;
+}
+
+.options label {
+    display: block;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+.button-group {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* 一般按鈕 */
+.button {
+    padding: 10px 20px;
+    background-color: #3b5998;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 2px;
+}
+/* 小尺寸按鈕，文字等高 */
+.button-inline {
+    display: inline-block;
+    padding: 2px 5px;
+    font-size: 14px;
+    line-height: 1.4; 
+    height: auto;      /* 移除固定高度，隨字體大小調整 */
+    margin: 0 3px;
+}
+
+.button_qc {
+    padding: 10px 20px;
+    background-color: #dfe1e7;
+    color: #3b5998;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 2px;
+}
+
+.button:hover {
+    background-color: #2a4274;
+}
+
+.incorrect {
+    background-color: #f8d7da;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.correct-answer {
+    color: green;
+    font-weight: bold;
+}
+
+.score {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.history {
+    margin-top: 40px;
+}
+
+.history h2 {
+    color: #3b5998;
+}
+
+.input-group {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.input-group input {
+    width: 60px;
+    padding: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.input-group .button {
+    margin-left: 10px;
+}
+
+/* 章節多選清單 */
+.chapter-select {
+    margin-top: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+    display: inline-block;
+    width: 97%;
+}
+
+.chapter-select label {
+    display: block;
+    margin: 5px 0;
+}
+
+/* 隱藏區塊 */
+.hidden {
+    display: none;
+}
+
+/* 回顧頁面 */
+.review-container {
+    margin-top: 20px;
+}
+.review-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #3b5998;
+}
+
+/* 單題容器，可依需求美化 */
+.question-block {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+.question-block p {
+    margin: 4px 0;
+}
