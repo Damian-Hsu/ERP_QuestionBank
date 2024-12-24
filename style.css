@@ -11,6 +11,10 @@ h1 {
     color: #3b5998;
     margin-top: 20px;
 }
+h3{
+    padding-left: 10px;
+    margin: 0px;
+}
 h5 {
     text-align: center;
     color: #37488a;
