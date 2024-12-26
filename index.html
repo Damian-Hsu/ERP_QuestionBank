@@ -9,76 +9,75 @@
 </head>
 <body>
   <h1>ERP測驗系統</h1>
+  <button id="toggleDarkMode" class="button floating-button">B</button>
 
   <!-- 初始化區塊(主頁面) -->
   <div class="container" id="mainPage">
     <h3>請選擇章節</h3> 
-      <!-- 多選章節區塊 -->
-      <div class="chapter-select" id="chapterSelect">
-           
-          <!-- 全選 Checkbox -->
-          <label>
-              <input type="checkbox" id="selectAll" checked>
-              全選
-          </label>
-      </div>
+    <!-- 多選章節區塊 -->
+    <div class="chapter-select" id="chapterSelect">
+      <!-- 全選 Checkbox -->
+      <label>
+        <input type="checkbox" id="selectAll" checked>
+        全選
+      </label>
+    </div>
 
-      <div class="input-group">
-          <label for="questionCount" id="questionCountLabel">請輸入題數（1-452）：</label>
-          <input type="number" id="questionCount" min="1" max="452" value="50">
-          <button class="button_qc" id="qc_10">10</button>
-          <button class="button_qc" id="qc_50">50</button>
-          <button class="button_qc" id="qc_100">100</button>
-          <br>
-          <button class="button" id="startbtn">開始測驗</button>
-          <!-- 回顧所有錯題按鈕 -->
-          <button class="button" id="reviewAllWrongBtn">回顧所有錯題</button>
-      </div>
+    <div class="input-group">
+      <label for="questionCount" id="questionCountLabel">請輸入題數（1-452）：</label>
+      <input type="number" id="questionCount" min="1" max="452" value="50">
+      <button class="button_qc" id="qc_10">10</button>
+      <button class="button_qc" id="qc_50">50</button>
+      <button class="button_qc" id="qc_100">100</button>
+      <br>
+      <button class="button" id="startbtn">開始測驗</button>
+      <!-- 回顧所有錯題按鈕 -->
+      <button class="button" id="reviewAllWrongBtn">回顧所有錯題</button>
+    </div>
 
-      <div class="history">
-          <h2>測驗歷史</h2>
-          <ul id="historyList"></ul>
-      </div>
+    <div class="history">
+      <h2>測驗歷史</h2>
+      <ul id="historyList"></ul>
+    </div>
   </div>
 
   <!-- 答題區塊 -->
   <div class="container hidden" id="quizPage">
-      <div class="progress-bar">
-          <div class="progress"></div>
-      </div>
-      <div id="questions"></div>
-      <div class="button-group">
-          <button class="button" id="submitBtn">繳交</button>
-          <button class="button" id="continueBtn" style="display: none;">繼續</button>
-          <button class="button" id="cancelBtn" style="display: none;">取消</button>
-      </div>
-      <div class="score" id="score"></div>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+    <div id="questions"></div>
+    <div class="button-group">
+      <button class="button" id="submitBtn">繳交</button>
+      <button class="button" id="continueBtn" style="display: none;">繼續</button>
+      <button class="button" id="cancelBtn" style="display: none;">取消</button>
+    </div>
+    <div class="score" id="score"></div>
   </div>
 
   <!-- 回顧某次測驗的頁面 -->
   <div class="container hidden" id="reviewPage">
-      <div id="reviewHeader" class="review-header"></div>
-      <button class="button" id="toggleWrongBtn">顯示錯誤題目</button>
-      <button class="button" id="ageinWrongBtn">再試一次</button>
-      <div id="reviewQuestions" class="review-container"></div>
-      <div class="button-group">
-          <button class="button" id="backToMainPageBtn">返回初始頁面</button>
-      </div>
+    <div id="reviewHeader" class="review-header"></div>
+    <button class="button" id="toggleWrongBtn">顯示錯誤題目</button>
+    <button class="button" id="ageinWrongBtn">再試一次</button>
+    <div id="reviewQuestions" class="review-container"></div>
+    <div class="button-group">
+      <button class="button" id="backToMainPageBtn">返回初始頁面</button>
+    </div>
   </div>
 
   <!-- 回顧所有錯題的頁面 -->
   <div class="container hidden" id="allWrongPage">
-      <h2>錯題回顧</h2>
-      <button class="button" id="ReCheckWrongBtn">錯誤題目練習</button>
-      <div id="allWrongList"></div>
-      <div class="button-group">
-          <button class="button" id="backToMainPageFromWrong">回上一頁</button>
-      </div>
+    <h2>錯題回顧</h2>
+    <button class="button" id="ReCheckWrongBtn">錯誤題目練習</button>
+    <div id="allWrongList"></div>
+    <div class="button-group">
+      <button class="button" id="backToMainPageFromWrong">回上一頁</button>
+    </div>
   </div>
   
-  <h5>By CYUT IM Jerry Hsu v2.4.2</h5>
+  <h5>By CYUT IM Jerry Hsu v2.5.1</h5>
   <h6>Bug Report Email : imyudieok@gmail.com</h6>
-
 
   <!-- 載入主程式檔 -->
   <script src="script.js" defer></script>

@@ -125,6 +125,7 @@ function renderQuestions() {
 
     const questionDiv = document.createElement("div");
     questionDiv.className = "question";
+    
     questionDiv.id = "q" + index;
 
     questionDiv.innerHTML = `
@@ -137,6 +138,10 @@ function renderQuestions() {
       </div>
     `;
     questionsDiv.appendChild(questionDiv);
+    if (document.body.classList.contains("dark-mode")) {
+      questionDiv.classList.add("dark-mode");
+      document.querySelectorAll("label").forEach(label => label.classList.add("dark-mode"));
+    }
   });
 }
 
@@ -340,6 +345,17 @@ document.addEventListener("change", (e) => {
     answers[questionId] = e.target.value;
     answeredCount = Object.keys(answers).length;
     updateProgress();
+
+    // 改變區塊顏色
+    
+    const questionElement = document.getElementById("q" + questionId);
+    if (questionElement) {
+      questionElement.classList.add("fill");
+      if (document.body.classList.contains("dark-mode")) {
+        questionElement.classList.add("dark-mode");
+      };
+    }
+   
   }
 });
 
@@ -347,8 +363,16 @@ document.addEventListener("change", (e) => {
 // (13) 繳交答案
 // --------------------------
 document.getElementById("submitBtn").addEventListener("click", () => {
-  if (Object.keys(answers).length < selectedQuestions.length) {
-    alert("請回答所有題目");
+  const unansweredQuestions = selectedQuestions.filter((id, index) => !answers.hasOwnProperty(index));
+  if (unansweredQuestions.length > 0) {
+    const firstUnansweredQuestionIndex = selectedQuestions.indexOf(unansweredQuestions[0]);
+    alert(`剩餘${unansweredQuestions.length}題尚未回答`);
+    setTimeout(() => {
+      const questionElement = document.getElementById("q" + firstUnansweredQuestionIndex);
+      if (questionElement) {
+        questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 0);
     return;
   }
 
@@ -377,6 +401,18 @@ document.getElementById("submitBtn").addEventListener("click", () => {
           label.classList.add("correct-answer");
         }
       });
+      if (document.body.classList.contains("dark-mode")) {
+        options.forEach(label => label.classList.add("dark-mode"));
+      }
+    }
+  });
+
+  // 檢查並添加 dark-mode 類
+  document.querySelectorAll(".correct-answer").forEach(label => {
+    if (document.body.classList.contains("dark-mode")) {
+      label.classList.add("dark-mode");
+    } else {
+      label.classList.remove("dark-mode");
     }
   });
 
@@ -530,15 +566,29 @@ function renderReviewQuestions(historyRecord, mode) {
     const div = document.createElement("div");
     div.className = "question-block";
     if (isWrong) div.classList.add("incorrect");
-
-    div.innerHTML = `
+    if (document.body.classList.contains("dark-mode")) {
+      if (isWrong) div.classList.add("dark-mode");
+      div.innerHTML = `
       <p><strong>(${qid}題) ${q.question}</strong></p>
       <p>A. ${q.A}</p>
       <p>B. ${q.B}</p>
       <p>C. ${q.C}</p>
       <p>D. ${q.D}</p>
-      <p style="color: green;">正解：${q.ans}</p>
+      <p class="ans_color dark-mode" >正解：${q.ans}</p>
     `;
+    }else{
+      div.innerHTML = `
+      <p><strong>(${qid}題) ${q.question}</strong></p>
+      <p>A. ${q.A}</p>
+      <p>B. ${q.B}</p>
+      <p>C. ${q.C}</p>
+      <p>D. ${q.D}</p>
+      <p class="ans_color">正解：${q.ans}</p>
+    `;
+    };
+   
+
+    
     reviewQuestionsDiv.appendChild(div);
   });
 }
@@ -570,17 +620,31 @@ function renderAllWrongPage() {
     if (!q) return;
 
     const block = document.createElement("div");
-    block.className = "question-block incorrect";
+    block.className = "question-block";
     block.id = "wrong-qid-" + qid; // 用於 scrollIntoView
-    block.innerHTML = `
+
+    block.classList.add("incorrect");
+    if (document.body.classList.contains("dark-mode")) {
+      block.classList.add("dark-mode");
+      block.innerHTML = ` 
       <p><strong>(${qid}題) ${q.question}</strong></p>
       <p>A. ${q.A}</p>
       <p>B. ${q.B}</p>
       <p>C. ${q.C}</p>
       <p>D. ${q.D}</p>
-      <p style="color: green;">正解：${q.ans}</p>
+      <p class="ans_color dark-mode" >正解：${q.ans}</p>
     `;
-
+    }else{
+      block.innerHTML = `
+      <p><strong>(${qid}題) ${q.question}</strong></p>
+      <p>A. ${q.A}</p>
+      <p>B. ${q.B}</p>
+      <p>C. ${q.C}</p>
+      <p>D. ${q.D}</p>
+      <p class="ans_color">正解：${q.ans}</p>
+    `;
+    };
+   
     // 列出多筆出錯紀錄
     wrongMap[qid].forEach(rIndex => {
       const rec = history[rIndex];
@@ -597,6 +661,9 @@ function renderAllWrongPage() {
     });
     allWrongListDiv.appendChild(block);
   });
+  if (document.body.classList.contains("dark-mode")) {
+    document.querySelectorAll(".button-inline").forEach(buttoninline => buttoninline.classList.add("dark-mode"));
+  }
 }
 
 // --------------------------
@@ -628,6 +695,9 @@ allWrongListDiv.addEventListener("click", (e) => {
       renderHistory();
     }
   }
+  if (document.body.classList.contains("dark-mode")) {
+    document.querySelectorAll(".button-inline").forEach(buttoninline => buttoninline.classList.add("dark-mode"));
+  }
 });
 
 // --------------------------
@@ -644,7 +714,7 @@ function renderHistory() {
   const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
   historyList.innerHTML = "";
 
-  history.forEach((rec, index) => {
+  history.reverse().forEach((rec, index) => {
     const li = document.createElement("li");
     li.innerText = `${rec.date} - 分數：${rec.score}，用時：${rec.time}`;
 
@@ -673,7 +743,11 @@ function renderHistory() {
     li.appendChild(btnReview);
     li.appendChild(btnDelete);
     historyList.appendChild(li);
+    
   });
+  if (document.body.classList.contains("dark-mode")) {
+    document.querySelectorAll(".button-inline").forEach(buttoninline => buttoninline.classList.add("dark-mode"));
+  }
 }
 
 // --------------------------
@@ -687,3 +761,23 @@ function getTempHistoryRecord() {
   if (!data) return null;
   return JSON.parse(data);
 }
+document.getElementById("toggleDarkMode").addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  document.querySelectorAll(".container").forEach(container => container.classList.toggle("dark-mode"));
+  document.querySelectorAll("h1, h3, h5, h6").forEach(header => header.classList.toggle("dark-mode"));
+  document.querySelectorAll(".progress-bar").forEach(progressBar => progressBar.classList.toggle("dark-mode"));
+  document.querySelectorAll(".question").forEach(question => question.classList.toggle("dark-mode"));
+  document.querySelectorAll(".button").forEach(button => button.classList.toggle("dark-mode"));
+  document.querySelectorAll(".score").forEach(score => score.classList.toggle("dark-mode"));
+  document.querySelectorAll(".history h2").forEach(historyHeader => historyHeader.classList.toggle("dark-mode"));
+  document.querySelectorAll(".review-header").forEach(reviewHeader => reviewHeader.classList.toggle("dark-mode"));
+  document.querySelectorAll(".question-block").forEach(questionBlock => questionBlock.classList.toggle("dark-mode"));
+  document.querySelectorAll(".ans_color").forEach(anscolor => anscolor.classList.toggle("dark-mode"));
+  document.querySelectorAll(".correct-answer").forEach(correctAnswer => correctAnswer.classList.toggle("dark-mode"));
+  const toggleButton = document.getElementById("toggleDarkMode");
+  if (toggleButton.textContent === "B") {
+    toggleButton.textContent = "W";
+  } else {
+    toggleButton.textContent = "B";
+  }
+});

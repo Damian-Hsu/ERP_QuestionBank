@@ -6,25 +6,49 @@ body {
     padding: 0;
 }
 
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
 h1 {
     text-align: center;
     color: #3b5998;
     margin-top: 20px;
 }
-h3{
+
+h1.dark-mode {
+    color: #ffffff;
+}
+
+h3 {
     padding-left: 10px;
     margin: 0px;
 }
-h5 {
+
+h3.dark-mode {
+    color: #ffffff;
+}
+h5{
     text-align: center;
     color: #37488a;
     margin: 20px 0px 0px 0px;
+
 }
 h6 {
     text-align: center;
-    color: #98a6dd;
-    margin-top: 2px;
+    color: #8c93b1;
+    margin: 20px 0px 20px 0px;
 }
+
+h5.dark-mode, h6.dark-mode {
+    color: #98a6dd;
+}
+
+p {
+    margin: 0;
+}
+
 .container {
     width: 90%;
     max-width: 800px;
@@ -36,12 +60,21 @@ h6 {
     margin-top: 20px;
 }
 
+.container.dark-mode {
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
 .progress-bar {
     width: 100%;
     background-color: #e6e6e6;
     border-radius: 5px;
     overflow: hidden;
     margin-bottom: 20px;
+}
+
+.progress-bar.dark-mode {
+    background-color: #333333;
 }
 
 .progress {
@@ -52,9 +85,31 @@ h6 {
 }
 
 .question {
-    margin: 20px 0;
+    margin: 0px 0;
+    padding: 10px;
 }
 
+.question.dark-mode {
+    background-color: #2e2e2e;
+    color: #ffffff;
+}
+.question.fill{
+    background-color:rgb(236, 243, 250) ;
+}
+.question.dark-mode.fill{
+    background-color:#3e3e3e ;
+}
+
+.question.fill.incorrect {
+    background-color: #f8d7da;
+    border-radius: 5px;
+    padding: 10px;
+}
+.question.dark-mode.fill.incorrect.dark-mode {
+    background-color: #650b22;
+    border-radius: 5px;
+    padding: 10px;
+}
 .options {
     margin: 10px 0;
 }
@@ -80,6 +135,12 @@ h6 {
     cursor: pointer;
     margin: 10px 2px;
 }
+
+.button.dark-mode {
+    background-color: #555555;
+    color: #ffffff;
+}
+
 /* 小尺寸按鈕，文字等高 */
 .button-inline {
     display: inline-block;
@@ -88,6 +149,16 @@ h6 {
     line-height: 1.4; 
     height: auto;      /* 移除固定高度，隨字體大小調整 */
     margin: 0 3px;
+}
+.button-inline.dark-mode{
+    display: inline-block;
+    padding: 2px 5px;
+    font-size: 14px;
+    line-height: 1.4; 
+    height: auto;      /* 移除固定高度，隨字體大小調整 */
+    margin: 0 3px;
+    background-color: #555555;
+    color: #ffffff;
 }
 
 .button_qc {
@@ -104,14 +175,26 @@ h6 {
     background-color: #2a4274;
 }
 
+.button.dark-mode:hover {
+    background-color: #444444;
+}
+
 .incorrect {
     background-color: #f8d7da;
     border-radius: 5px;
     padding: 10px;
 }
-
+.incorrect.dark-mode {
+    background-color: #ac3c3caf;
+    border-radius: 5px;
+    padding: 10px;
+}
 .correct-answer {
     color: green;
+    font-weight: bold;
+}
+.correct-answer.dark-mode {
+    color:rgb(162, 254, 162);
     font-weight: bold;
 }
 
@@ -122,12 +205,20 @@ h6 {
     color: #333;
 }
 
+.score.dark-mode {
+    color: #ffffff;
+}
+
 .history {
     margin-top: 20px;
 }
 
 .history h2 {
     color: #3b5998;
+}
+
+.history h2.dark-mode {
+    color: #ffffff;
 }
 
 .input-group {
@@ -148,18 +239,10 @@ h6 {
 
 /* 章節多選清單 */
 .chapter-select {
-    
     overflow-y: auto;
-    /*
-    margin-top: 10px;
-    max-height: 500px;
-    border: 1px solid #ccc;
-    width: 97%;
-    */
     padding: 10px;
     text-align: left;
     display: inline-block;
-    
 }
 
 .chapter-select label {
@@ -176,10 +259,15 @@ h6 {
 .review-container {
     margin-top: 20px;
 }
+
 .review-header {
     font-weight: bold;
     margin-bottom: 10px;
     color: #3b5998;
+}
+
+.review-header.dark-mode {
+    color: #ffffff;
 }
 
 /* 單題容器，可依需求美化 */
@@ -188,6 +276,49 @@ h6 {
     padding-bottom: 15px;
     border-bottom: 1px solid #ccc;
 }
+
+.question-block.dark-mode {
+    border-bottom: 1px solid #444444;
+}
+
 .question-block p {
     margin: 4px 0;
+}
+.ans_color{
+    color: green;
+}
+.ans_color.dark-mode{
+    color:rgb(162, 254, 162);
+}
+.floating-button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #555555;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    opacity:0.5;
+}
+
+.floating-button:hover {
+    background-color: #111111;
+    opacity:0.9;
+}
+
+.floating-button.dark-mode  {
+    background-color: #616161;
+    color: #000000;
+}
+.floating-button.dark-mode:hover {
+    background-color: #ffffff;
+    opacity:0.9;
 }
