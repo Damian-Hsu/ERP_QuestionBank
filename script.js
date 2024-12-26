@@ -774,6 +774,9 @@ document.getElementById("toggleDarkMode").addEventListener("click", () => {
   document.querySelectorAll(".question-block").forEach(questionBlock => questionBlock.classList.toggle("dark-mode"));
   document.querySelectorAll(".ans_color").forEach(anscolor => anscolor.classList.toggle("dark-mode"));
   document.querySelectorAll(".correct-answer").forEach(correctAnswer => correctAnswer.classList.toggle("dark-mode"));
+  document.querySelectorAll(".button_qc").forEach(button_qc => button_qc.classList.toggle("dark-mode"));
+  document.querySelectorAll(".announcement").forEach(announcement => announcement.classList.toggle("dark-mode"));
+  
   const toggleButton = document.getElementById("toggleDarkMode");
   if (toggleButton.textContent === "B") {
     toggleButton.textContent = "W";
