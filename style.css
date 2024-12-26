@@ -1,11 +1,58 @@
 /* 基本樣式 */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
+html {
+--bg-color: #f9f9f9;
+--text-color: #000;
+}
+html.dark-mode {
+--bg-color: #121212;
+--text-color: #fff;
 }
 
+::view-transition-old(*) {
+animation: none;
+}
+
+::view-transition-new(*) {
+animation: clip 0.3s ease-in;
+}
+
+::view-transition-old(root) {
+z-index: 1;
+}
+
+::view-transition-new(root) {
+z-index: 9999;
+}
+
+html.dark-mode::view-transition-old(*) {
+animation: clip 0.3s ease-in reverse;
+}
+
+html.dark-mode::view-transition-new(*) {
+animation: none;
+}
+
+html.dark-mode::view-transition-old(root) {
+z-index: 9999;
+}
+
+html.dark-mode::view-transition-new(root) {
+z-index: 1;
+}
+
+@keyframes clip {
+from {
+    clip-path: circle(0% at var(--x) var(--y));
+}
+to {
+    clip-path: circle(var(--r) at var(--x) var(--y));
+}
+}
+
+body {
+background-color: var(--bg-color);
+color: var(--text-color);
+}
 body.dark-mode {
     background-color: #121212;
     color: #ffffff;

@@ -761,26 +761,26 @@ function getTempHistoryRecord() {
   if (!data) return null;
   return JSON.parse(data);
 }
-document.getElementById("toggleDarkMode").addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  document.querySelectorAll(".container").forEach(container => container.classList.toggle("dark-mode"));
-  document.querySelectorAll("h1, h3, h5, h6").forEach(header => header.classList.toggle("dark-mode"));
-  document.querySelectorAll(".progress-bar").forEach(progressBar => progressBar.classList.toggle("dark-mode"));
-  document.querySelectorAll(".question").forEach(question => question.classList.toggle("dark-mode"));
-  document.querySelectorAll(".button").forEach(button => button.classList.toggle("dark-mode"));
-  document.querySelectorAll(".score").forEach(score => score.classList.toggle("dark-mode"));
-  document.querySelectorAll(".history h2").forEach(historyHeader => historyHeader.classList.toggle("dark-mode"));
-  document.querySelectorAll(".review-header").forEach(reviewHeader => reviewHeader.classList.toggle("dark-mode"));
-  document.querySelectorAll(".question-block").forEach(questionBlock => questionBlock.classList.toggle("dark-mode"));
-  document.querySelectorAll(".ans_color").forEach(anscolor => anscolor.classList.toggle("dark-mode"));
-  document.querySelectorAll(".correct-answer").forEach(correctAnswer => correctAnswer.classList.toggle("dark-mode"));
-  document.querySelectorAll(".button_qc").forEach(button_qc => button_qc.classList.toggle("dark-mode"));
-  document.querySelectorAll(".announcement").forEach(announcement => announcement.classList.toggle("dark-mode"));
-  
+
+document.getElementById("toggleDarkMode").addEventListener("click", (e) => {
   const toggleButton = document.getElementById("toggleDarkMode");
-  if (toggleButton.textContent === "B") {
-    toggleButton.textContent = "W";
+  const x = e.clientX;
+  const y = e.clientY;
+  const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  
+  document.documentElement.style.setProperty('--x', x + 'px');
+  document.documentElement.style.setProperty('--y', y + 'px');
+  document.documentElement.style.setProperty('--r', endRadius + 'px');
+  
+  if (document.startViewTransition) {
+    document.startViewTransition(() => {
+      document.documentElement.classList.toggle('dark-mode');
+      document.querySelectorAll(".container, h1, h3, h5, h6, .progress-bar, .question, .button, .score, .history h2, .review-header, .question-block, .ans_color, .correct-answer, .button_qc, .announcement").forEach(el => el.classList.toggle("dark-mode"));
+      toggleButton.textContent = toggleButton.textContent === "B" ? "W" : "B";
+    });
   } else {
-    toggleButton.textContent = "B";
+    document.documentElement.classList.toggle('dark-mode');
+    document.querySelectorAll(".container, h1, h3, h5, h6, .progress-bar, .question, .button, .score, .history h2, .review-header, .question-block, .ans_color, .correct-answer, .button_qc, .announcement").forEach(el => el.classList.toggle("dark-mode"));
+    toggleButton.textContent = toggleButton.textContent === "B" ? "W" : "B";
   }
 });
