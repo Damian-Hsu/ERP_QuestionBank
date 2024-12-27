@@ -138,9 +138,9 @@ function renderQuestions() {
       </div>
     `;
     questionsDiv.appendChild(questionDiv);
-    if (document.body.classList.contains("dark-mode")) {
+    if (document.documentElement.classList.contains("dark-mode")) {
       questionDiv.classList.add("dark-mode");
-      document.querySelectorAll("label").forEach(label => label.classList.add("dark-mode"));
+      document.querySelectorAll(".question").forEach(question => question.classList.add("dark-mode"));
     }
   });
 }
@@ -351,7 +351,7 @@ document.addEventListener("change", (e) => {
     const questionElement = document.getElementById("q" + questionId);
     if (questionElement) {
       questionElement.classList.add("fill");
-      if (document.body.classList.contains("dark-mode")) {
+      if (document.documentElement.classList.contains("dark-mode")) {
         questionElement.classList.add("dark-mode");
       };
     }
@@ -401,7 +401,7 @@ document.getElementById("submitBtn").addEventListener("click", () => {
           label.classList.add("correct-answer");
         }
       });
-      if (document.body.classList.contains("dark-mode")) {
+      if (document.documentElement.classList.contains("dark-mode")) {
         options.forEach(label => label.classList.add("dark-mode"));
       }
     }
@@ -409,7 +409,7 @@ document.getElementById("submitBtn").addEventListener("click", () => {
 
   // 檢查並添加 dark-mode 類
   document.querySelectorAll(".correct-answer").forEach(label => {
-    if (document.body.classList.contains("dark-mode")) {
+    if (document.documentElement.classList.contains("dark-mode")) {
       label.classList.add("dark-mode");
     } else {
       label.classList.remove("dark-mode");
@@ -566,7 +566,7 @@ function renderReviewQuestions(historyRecord, mode) {
     const div = document.createElement("div");
     div.className = "question-block";
     if (isWrong) div.classList.add("incorrect");
-    if (document.body.classList.contains("dark-mode")) {
+    if (document.documentElement.classList.contains("dark-mode")) {
       if (isWrong) div.classList.add("dark-mode");
       div.innerHTML = `
       <p><strong>(${qid}題) ${q.question}</strong></p>
@@ -624,7 +624,7 @@ function renderAllWrongPage() {
     block.id = "wrong-qid-" + qid; // 用於 scrollIntoView
 
     block.classList.add("incorrect");
-    if (document.body.classList.contains("dark-mode")) {
+    if (document.documentElement.classList.contains("dark-mode")) {
       block.classList.add("dark-mode");
       block.innerHTML = ` 
       <p><strong>(${qid}題) ${q.question}</strong></p>
@@ -661,7 +661,7 @@ function renderAllWrongPage() {
     });
     allWrongListDiv.appendChild(block);
   });
-  if (document.body.classList.contains("dark-mode")) {
+  if (document.documentElement.classList.contains("dark-mode")) {
     document.querySelectorAll(".button-inline").forEach(buttoninline => buttoninline.classList.add("dark-mode"));
   }
 }
@@ -695,7 +695,7 @@ allWrongListDiv.addEventListener("click", (e) => {
       renderHistory();
     }
   }
-  if (document.body.classList.contains("dark-mode")) {
+  if (document.documentElement.classList.contains("dark-mode")) {
     document.querySelectorAll(".button-inline").forEach(buttoninline => buttoninline.classList.add("dark-mode"));
   }
 });
@@ -745,7 +745,7 @@ function renderHistory() {
     historyList.appendChild(li);
     
   });
-  if (document.body.classList.contains("dark-mode")) {
+  if (document.documentElement.classList.contains("dark-mode")) {
     document.querySelectorAll(".button-inline").forEach(buttoninline => buttoninline.classList.add("dark-mode"));
   }
 }
@@ -762,10 +762,11 @@ function getTempHistoryRecord() {
   return JSON.parse(data);
 }
 
-document.getElementById("toggleDarkMode").addEventListener("click", (e) => {
+document.getElementById("toggleDarkMode").addEventListener("click", () => {
   const toggleButton = document.getElementById("toggleDarkMode");
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = toggleButton.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
   const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
   
   document.documentElement.style.setProperty('--x', x + 'px');
@@ -776,6 +777,7 @@ document.getElementById("toggleDarkMode").addEventListener("click", (e) => {
     document.startViewTransition(() => {
       document.documentElement.classList.toggle('dark-mode');
       document.querySelectorAll(".container, h1, h3, h5, h6, .progress-bar, .question, .button, .score, .history h2, .review-header, .question-block, .ans_color, .correct-answer, .button_qc, .announcement").forEach(el => el.classList.toggle("dark-mode"));
+      
       toggleButton.textContent = toggleButton.textContent === "B" ? "W" : "B";
     });
   } else {

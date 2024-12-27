@@ -153,7 +153,7 @@ p {
     padding: 10px;
 }
 .question.dark-mode.fill.incorrect.dark-mode {
-    background-color: #650b22;
+    background-color: #ac3c3caf;
     border-radius: 5px;
     padding: 10px;
 }
@@ -324,14 +324,14 @@ p {
 /* 單題容器，可依需求美化 */
 .question-block {
     margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    /*border-bottom: 1px solid #ccc;*/
 }
-
+/*
 .question-block.dark-mode {
     border-bottom: 1px solid #444444;
 }
-
+*/
 .question-block p {
     margin: 4px 0;
 }
