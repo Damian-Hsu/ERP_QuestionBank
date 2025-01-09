@@ -42,7 +42,7 @@ function renderFillInQuestions() {
     questionDiv.innerHTML = `
       <p>${index + 1}. ${q.chinese}</p>
       <p>${q.question}</p>
-      <input type="text" id="answer-${index}" class="fill-in-input" placeholder="輸入答案">
+      <input type="text" id="answer-${index}" class="fill-in-input" placeholder="輸入答案" autocomplete="off">
     `;
 
     questionsDiv.appendChild(questionDiv);
