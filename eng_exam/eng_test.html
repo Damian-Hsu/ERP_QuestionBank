@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>填空題練習系統</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 id="title">商業英文期末考模擬</h1>
+  <button id="toggleDarkMode" class="button floating-button">B</button>
+
+  <!-- 初始化區塊(主頁面) -->
+  <div class="container" id="mainPage">
+    <div class="input-group">
+        
+      <label for="questionCount" id="questionCountLabel">請輸入題數：</label>
+      <input type="number" id="questionCount" min="1" value="25">
+      <label>
+        <input type="checkbox" id="shuffleCheckbox" >
+        打亂題目
+      </label>
+      <button class="button" id="startbtn">開始練習</button>
+    </div>
+    <div class="announcement">
+      <p>本系統支持填空題型，請仔細填寫答案！</p>
+    </div>
+  </div>
+
+  <!-- 練習區塊 -->
+  <div class="container hidden" id="practicePage">
+    <div class="progress-bar" id="progress-bar">
+      <div class="progress"></div>
+    </div>
+    <div id="questions"></div>
+    <div class="button-group">
+      <button class="button" id="submitBtn">繳交</button>
+      <button class="button" id="continueBtn" style="display: none;">繼續</button>
+    </div>
+    <div class="score" id="score"></div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

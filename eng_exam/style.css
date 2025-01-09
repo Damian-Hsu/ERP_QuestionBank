@@ -298,12 +298,18 @@ word-break: break-word; /* 遇到長字時自動換行 */
     padding: 5px;
     font-size: 16px;
     text-align: center;
+    gap: 1px; /* 單選框與文字之間的間距 */
 }
 
 .input-group .button {
     margin-left: 10px;
 }
 
+input#shuffleCheckbox {
+    margin: 5px;
+    padding: 5px;
+    width: auto; /* 或指定適當寬度 */
+  }
 /* 章節多選清單 */
 .chapter-select {
     overflow-y: auto;
@@ -409,6 +415,63 @@ word-break: break-word; /* 遇到長字時自動換行 */
 }
 .announcement p {
     margin: 5px 0 ;
+}
+/* 美化輸入框 */
+input[type="text"],
+input[type="number"] {
+    width: 80%; /* 適應不同螢幕寬度 */
+    max-width: 300px;
+    padding: 10px 15px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    background-color: #f9f9f9;
+    color: var(--text-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* 聚焦效果 */
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #3b5998;
+    box-shadow: 0 0 8px rgba(59, 89, 152, 0.5);
+    background-color: #ffffff;
+}
+
+/* 在深色模式下的輸入框樣式 */
+html.dark-mode input[type="text"],
+html.dark-mode input[type="number"] {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-color: #555;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+html.dark-mode input[type="text"]:focus,
+html.dark-mode input[type="number"]:focus {
+    border-color: #6a8dd6;
+    box-shadow: 0 0 8px rgba(106, 141, 214, 0.7);
+}
+
+
+/* 輸入框容器 */
+.input-group {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.input-group.dark-mode label {
+    color: #fff;
 }
 
 @media (max-width: 470px) {

@@ -30,7 +30,6 @@ const reviewHeader        = document.getElementById("reviewHeader");
 const reviewQuestionsDiv  = document.getElementById("reviewQuestions");
 const toggleWrongBtn      = document.getElementById("toggleWrongBtn");
 const selectAllCheckbox   = document.getElementById("selectAll");
-const title               = document.getElementById("title");
 
 // --------------------------
 // (1) 載入章節設定 + 動態建立UI
@@ -130,14 +129,13 @@ function renderQuestions() {
     questionDiv.id = "q" + index;
 
     questionDiv.innerHTML = `
-      <p>${index+1}. ${q.question}</p>
+      <p><strong>${index+1}. ${q.question}</strong></p>
       <div class="options">
-          <label><input type="radio" name="q${index}" value="A" ${userAnswer === 'A' ? 'checked' : ''}><span> A. ${q.A}</span></label>
-          <label><input type="radio" name="q${index}" value="B" ${userAnswer === 'B' ? 'checked' : ''}><span> B. ${q.B}</span></label>
-          <label><input type="radio" name="q${index}" value="C" ${userAnswer === 'C' ? 'checked' : ''}><span> C. ${q.C}</span></label>
-          <label><input type="radio" name="q${index}" value="D" ${userAnswer === 'D' ? 'checked' : ''}><span> D. ${q.D}</span></label>
+          <label><input type="radio" name="q${index}" value="A" ${userAnswer === 'A' ? 'checked' : ''}> A. ${q.A}</label>
+          <label><input type="radio" name="q${index}" value="B" ${userAnswer === 'B' ? 'checked' : ''}> B. ${q.B}</label>
+          <label><input type="radio" name="q${index}" value="C" ${userAnswer === 'C' ? 'checked' : ''}> C. ${q.C}</label>
+          <label><input type="radio" name="q${index}" value="D" ${userAnswer === 'D' ? 'checked' : ''}> D. ${q.D}</label>
       </div>
-      
     `;
     questionsDiv.appendChild(questionDiv);
     if (document.documentElement.classList.contains("dark-mode")) {
@@ -248,7 +246,6 @@ document.getElementById("startbtn").addEventListener("click", () => {
   scoreDiv.innerHTML = "";
 
   // 按鈕狀態
-  //title.textContent = "測驗中";
   document.getElementById("submitBtn").style.display   = "inline-block";
   document.getElementById("continueBtn").style.display = "none";
   document.getElementById("cancelBtn").style.display = "inline-block";
@@ -716,7 +713,8 @@ function saveHistory(record) {
 function renderHistory() {
   const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
   historyList.innerHTML = "";
-  history.slice().reverse().forEach((rec, index) => {
+
+  history.reverse().forEach((rec, index) => {
     const li = document.createElement("li");
     li.innerText = `${rec.date} - 分數：${rec.score}，用時：${rec.time}`;
 
@@ -736,7 +734,7 @@ function renderHistory() {
     btnDelete.className = "button button-inline";
     btnDelete.textContent = "刪除";
     btnDelete.addEventListener("click", () => {
-      history.splice(history.length - index - 1, 1);
+      history.splice(index, 1);
       localStorage.setItem("quizHistory", JSON.stringify(history));
       renderHistory();
     });
@@ -767,59 +765,24 @@ function getTempHistoryRecord() {
 document.getElementById("toggleDarkMode").addEventListener("click", () => {
   const toggleButton = document.getElementById("toggleDarkMode");
   const rect = toggleButton.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2 ; // 考慮滾動偏移
-  const centerY = rect.top + rect.height / 2 ;
-
-  const maxRadius = Math.hypot(
-    Math.max(centerX, document.documentElement.scrollWidth - centerX),
-    Math.max(centerY, document.documentElement.scrollHeight - centerY)
-  );
-
-  // 設定 CSS 變數
-  document.documentElement.style.setProperty('--x', centerX + 'px');
-  document.documentElement.style.setProperty('--y', centerY + 'px');
-  document.documentElement.style.setProperty('--r', maxRadius + 'px');
-
-  // 切換 dark-mode 的核心邏輯
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark-mode');
-    document.querySelectorAll(
-      ".container, h1, h3, h5, h6, .progress-bar, .question, .button, .score, .history h2, .review-header, .question-block, .ans_color, .correct-answer, .button_qc, .announcement"
-    ).forEach((el) => el.classList.toggle("dark-mode"));
-
-    // 切換按鈕文字
-    toggleButton.textContent = toggleButton.textContent === "B" ? "W" : "B";
-  };
-
-  // 支援 startViewTransition
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  
+  document.documentElement.style.setProperty('--x', x + 'px');
+  document.documentElement.style.setProperty('--y', y + 'px');
+  document.documentElement.style.setProperty('--r', endRadius + 'px');
+  
   if (document.startViewTransition) {
-    document.startViewTransition(toggleDarkMode);
+    document.startViewTransition(() => {
+      document.documentElement.classList.toggle('dark-mode');
+      document.querySelectorAll(".container, h1, h3, h5, h6, .progress-bar, .question, .button, .score, .history h2, .review-header, .question-block, .ans_color, .correct-answer, .button_qc, .announcement").forEach(el => el.classList.toggle("dark-mode"));
+      
+      toggleButton.textContent = toggleButton.textContent === "B" ? "W" : "B";
+    });
   } else {
-    toggleDarkMode();
+    document.documentElement.classList.toggle('dark-mode');
+    document.querySelectorAll(".container, h1, h3, h5, h6, .progress-bar, .question, .button, .score, .history h2, .review-header, .question-block, .ans_color, .correct-answer, .button_qc, .announcement").forEach(el => el.classList.toggle("dark-mode"));
+    toggleButton.textContent = toggleButton.textContent === "B" ? "W" : "B";
   }
-});
-
-const stickyElement = document.getElementById('progress-bar');
-const toggleDarkMode = document.getElementById("toggleDarkMode");
-
-window.addEventListener('scroll', () => {
-  
-  if (window.getComputedStyle(document.getElementById('quizPage')).display != "none"){
-    // 檢查元素是否碰到頂端
-    const stickyRect = stickyElement.getBoundingClientRect();
-    const scaleY = stickyRect.top <= 20 ? 0.3 : 1; 
-    const scaleX = stickyRect.top <= 20 ? 1.1 : 1; 
-    const opacity = stickyRect.top <= 20 ? 0.9 : 1; // 碰到頂端時透明度為 0.5，否則恢復 
-    const td_btn_scale = stickyRect.top <= 20 ? 0.8 : 1; 
-    stickyElement.style.transform = stickyElement.style.transform = `scale(${scaleX}, ${scaleY})`;
-    stickyElement.style.opacity = opacity;
-    toggleDarkMode.style.transform = `scale(${td_btn_scale})`;
-    toggleDarkMode.style.right = stickyRect.top <= 20 ? "0px" : "10px";
-    toggleDarkMode.style.bottom = stickyRect.top <= 20 ? "-10px" : "10px";
-  }else{
-    toggleDarkMode.style.transform = `scale(1)`;
-    toggleDarkMode.style.right = "10px";
-    toggleDarkMode.style.bottom = "10px";
-  } 
-  
 });

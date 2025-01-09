@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sticky Example</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .header {
+      background-color: #f4f4f4;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .sticky {
+      position: sticky;
+      top: 0; /* 距離螢幕頂端的距離 */
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      z-index: 1000; /* 確保它會位於其他元素之上 */
+    }
+
+    .content {
+      padding: 20px;
+      height: 2000px; /* 模擬長內容 */
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>我的網站</h1>
+  </div>
+
+  <div class="sticky">
+    <p>我會黏在螢幕頂端！</p>
+  </div>
+
+  <div class="content">
+    <p>這是主要內容。向下滾動看看效果！</p>
+  </div>
+</body>
+</html>
