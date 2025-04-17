@@ -1,7 +1,7 @@
 {
   "1": {
     "chinese": "我們正卯足全力準備一場大型促銷活動，並希望能維持某種程度的消費刺激",
-    "question": "We’re gearing up for a big ______________ and hope to maintain a certain level of excitement.",
+    "question": "We're gearing up for a big ______________ and hope to maintain a certain level of excitement.",
     "ans": "promotion"
   },
   "2": {
@@ -16,7 +16,7 @@
   },
   "4": {
     "chinese": "我會在這周結束之前將問卷設計好。",
-    "question": "I’ll have the _____________________ designed by the end of this week.",
+    "question": "I'll have the _____________________ designed by the end of this week.",
     "ans": "questionnaires"
   },
   "5": {
@@ -31,7 +31,7 @@
   },
   "7": {
     "chinese": "網路廣告會吸引正在上網的消費者，而我們將利用廣告看板來吸引離線使用者的目光。",
-    "question": "Internet ads will catch consumers who are browsing the web, and we’ll use ________________ to catch the attention of offline users.",
+    "question": "Internet ads will catch consumers who are browsing the web, and we'll use ________________ to catch the attention of offline users.",
     "ans": "billboards"
   },
   "8": {
@@ -41,7 +41,7 @@
   },
   "9": {
     "chinese": "我們會展現它對整個家庭都很有用。",
-    "question": "We’ll _______________ its usefulness for the entire family.",
+    "question": "We'll _______________ its usefulness for the entire family.",
     "ans": "demonstrate"
   },
   "10": {
@@ -51,7 +51,7 @@
   },
   "11": {
     "chinese": "我們產品上市那天就會撥出第一支電視廣告。",
-    "question": "We’ll air the first TV commercial the day our product ________   _____   ________   ____________.",
+    "question": "We'll air the first TV commercial the day our product ________   _____   ________   ____________.",
     "ans": "goes on the market"
   },
   "12": {
@@ -61,12 +61,12 @@
   },
   "13": {
     "chinese": "很榮幸終於能見到您本人，傑克森先生。",
-    "question": "It’s a pleasure to finally meet you _____   ____________, Mr. Jackson.",
+    "question": "It's a pleasure to finally meet you _____   ____________, Mr. Jackson.",
     "ans": "in person"
   },
   "14": {
     "chinese": "請叫我馬克斯就可以了。那麼今天的議程包含哪些議題呢?",
-    "question": "Just call me Max, please. So what’s on the ____________ for today?",
+    "question": "Just call me Max, please. So what's on the ____________ for today?",
     "ans": "agenda"
   },
   "15": {
@@ -77,7 +77,7 @@
   "16": {
     "chinese": "好。我等一下沒關係。",
     "question": "OK. I ________   __________ waiting.",
-    "ans": "don’t mind"
+    "ans": "don't mind"
   },
   "17": {
     "chinese": "等待的期間您想要喝點咖啡或茶嗎?",
@@ -96,7 +96,7 @@
   },
   "20": {
     "chinese": "我們有提供一個特惠方案，我相信你們會感興趣的。",
-    "question": "We're offering a special __________ that I believe you’d be interested in.",
+    "question": "We're offering a special __________ that I believe you'd be interested in.",
     "ans": "deal"
   },
   "21": {
@@ -107,7 +107,7 @@
   "22": {
     "chinese": "部分原因是一項新技術延長了裝置的電池壽命。(請用空格隔開答案)",
     "question": "This is partly due to an _____________ that ___________ the ____________ battery life.",
-    "ans": "addition extends device’s"
+    "ans": "addition extends device's"
   },
   "23": {
     "chinese": "我們可以保證我們的服務和產品會使貴公司受益。(請用空格隔開答案)",
@@ -121,7 +121,7 @@
   },
   "25": {
     "chinese": "我想舉杯慶祝我們的持續合作與其帶來的互惠互利。",
-    "question": "I’d like to __________   _____   ___________ to our continued cooperation and the mutual benefits it brings.",
+    "question": "I'd like to __________   _____   ___________ to our continued cooperation and the mutual benefits it brings.",
     "ans": "make a toast"
   },
   "26": {
