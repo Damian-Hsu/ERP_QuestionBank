@@ -1,128 +1,132 @@
 {
-    "1": {
-      "chinese": "讓我們直接切入正題吧，克萊爾，請做會議紀錄。",
-      "question": "Let’s get down to business. Claire, _____  _____  ________, please.",
-      "ans": "take the minutes"
-    },
-    "2": {
-      "chinese": "這是腦力激盪會議;想到甚麼就說出來!誰有什麼點子了嗎?",
-      "question": "This is a _____________ session; anything goes! Who’s got an idea.",
-      "ans": "brainstorming"
-    },
-    "3": {
-      "chinese": "我們為忠實顧客舉辦一場感恩派對如何?",
-      "question": "How about throwing an ___________ party for our loyal customers.",
-      "ans": "appreciation"
-    },
-    "4": {
-      "chinese": "你的聲音聽起來失真了/怪怪的。你可以調整你那邊的音量嗎?",
-      "question": "Your voice sounds distorted/weird. Could you adjust the ___________ on your side?",
-      "ans": "volume"
-    },
-    "5": {
-      "chinese": "連線不是很好。我們掛斷後再試一次吧。",
-      "question": "The __________ isn’t great. Let’s hang up and try again.",
-      "ans": "connection"
-    },
-    "6": {
-      "chinese": "這場簡報的目的是要檢視去年的銷售數據。",
-      "question": "The purpose of this presentation is to review last year’s sales__________.",
-      "ans": "figures"
-    },
-    "7": {
-      "chinese": "現在，我們就接著討論未來兩年所擬議的預算吧。",
-      "question": "Now let’s move on to the proposed _________ for the next two years.",
-      "ans": "budget"
-    },
-    "8": {
-      "chinese": "這張圖表指出我們的產品在國內哪些地區最暢銷。",
-      "question": "The ___________ here points out the regions of the country where our products have been selling the best.",
-      "ans": "diagram"
-    },
-    "9": {
-      "chinese": "有問題或意見請隨時打斷我。",
-      "question": "Feel free to ____________ me at any time whit questions or comments.",
-      "ans": "interrupt"
-    },
-    "10": {
-      "chinese": "我想見個面能釐清所有的事情。",
-      "question": "I think a ________________ would clear everything up.",
-      "ans": "face-to-face"
-    },
-    "11": {
-      "chinese": "當然可以。而且你來這裡的時候可以參觀工廠。",
-      "question": "Sure. And you can _______ the plant when you’re here.",
-      "ans": "tour"
-    },
-    "12": {
-      "chinese": "我們設施的視察明天照原定計畫進行嗎?",
-      "question": "Is tomorrow still on for the inspection of our_____________.",
-      "ans": "facilities"
-    },
-    "13": {
-      "chinese": "一切都安排的很完美。",
-      "question": "Everything has been _____________ perfectly.",
-      "ans": "arranged"
-    },
-    "14": {
-      "chinese": "如果有的話，我偏好逃生門那排的座位。",
-      "question": "If prefer an ______  ______ if one is available.",
-      "ans": "exit row"
-    },
-    "15": {
-      "chinese": "抱歉，逃生門那排的位子已被劃位。",
-      "question": "I’m afraid the exit row seats have already been _____________.",
-      "ans": "assigned"
-    },
-    "16": {
-      "chinese": "您此行來訪的目的為何?",
-      "question": "What is the __________ of your visit?",
-      "ans": "purpose"
-    },
-    "17": {
-      "chinese": "您有攜帶任何商業製品來本國嗎?",
-      "question": "Are you bringing any ______________ items into the country?",
-      "ans": "commercial"
-    },
-    "18": {
-      "chinese": "只有一些商展要用的樣品。",
-      "question": "Only some samples for a ________  ________.",
-      "ans": "trade expo"
-    },
-    "19": {
-      "chinese": "麻煩告訴我們要在哪裡設攤。",
-      "question": "Would you show us where we’ll be __________  _____?",
-      "ans": "setting up"
-    },
-    "20": {
-      "chinese": "好的。我們可以在哪裡卸下我們的設備?",
-      "question": "OK. And where can we ________ our equipment?",
-      "ans": "unload"
-    },
-    "21": {
-      "chinese": "你們在C103攤位。那是入口B的右邊。",
-      "question": "You’re at _________  C103. That’s on the right side of entrance B.",
-      "ans": "booth"
-    },
-    "22": {
-      "chinese": "你們的產品和其他產品有什麼不同?",
-      "question": "What makes your product different from ______  ________?",
-      "ans": "the rest"
-    },
-    "23": {
-      "chinese": "創新功能和優良服務的結合使我們與眾不同。",
-      "question": "A combination of ______________ features and superior service sets us apart.",
-      "ans": "innovative"
-    },
-    "24": {
-      "chinese": "如果有什麼我能為您效勞，請隨時來電。",
-      "question": "If there’s anything I can do for you, please don’t ___________ to call.",
-      "ans": "hesitate"
-    },
-    "25": {
-      "chinese": "好的。你一有追蹤查詢碼就通知我。",
-      "question": "OK. Just let me know when you have the ____________  ____________ for the shipment.",
-      "ans": "tracking number"
-    }
+  "1": {
+    "chinese": "我們正卯足全力準備一場大型促銷活動，並希望能維持某種程度的消費刺激",
+    "question": "We’re gearing up for a big ______________ and hope to maintain a certain level of excitement.",
+    "ans": "promotion"
+  },
+  "2": {
+    "chinese": "首先，我們必須要確定我們的目標客群。",
+    "question": "First of all, we have to ____________ our target customer.",
+    "ans": "define"
+  },
+  "3": {
+    "chinese": "這個活動我們將目標放在二十五至四時歲區間的消費者。",
+    "question": "For this ______________, we are targeting consumers in the 25 to 40 year age range.",
+    "ans": "campaign"
+  },
+  "4": {
+    "chinese": "我會在這周結束之前將問卷設計好。",
+    "question": "I’ll have the _____________________ designed by the end of this week.",
+    "ans": "questionnaires"
+  },
+  "5": {
+    "chinese": "這是我們調查結果的報告。",
+    "question": "This is the report on the findings of our _________________",
+    "ans": "investigation"
+  },
+  "6": {
+    "chinese": "這項產品在我的潛在市場很可能具有接受度。",
+    "question": "It is likely that the product will find _________________ in our potential market.",
+    "ans": "acceptance"
+  },
+  "7": {
+    "chinese": "網路廣告會吸引正在上網的消費者，而我們將利用廣告看板來吸引離線使用者的目光。",
+    "question": "Internet ads will catch consumers who are browsing the web, and we’ll use ________________ to catch the attention of offline users.",
+    "ans": "billboards"
+  },
+  "8": {
+    "chinese": "增加網路廣告應該能大大增進品牌辨識度。",
+    "question": "More online advertising would be great for Improving ____________   ______________.",
+    "ans": "brand recognition"
+  },
+  "9": {
+    "chinese": "我們會展現它對整個家庭都很有用。",
+    "question": "We’ll _______________ its usefulness for the entire family.",
+    "ans": "demonstrate"
+  },
+  "10": {
+    "chinese": "我們也可以展示它新的人性化功能。",
+    "question": "We can also present its new user-friendly _____________.",
+    "ans": "features"
+  },
+  "11": {
+    "chinese": "我們產品上市那天就會撥出第一支電視廣告。",
+    "question": "We’ll air the first TV commercial the day our product ________   _____   ________   ____________.",
+    "ans": "goes on the market"
+  },
+  "12": {
+    "chinese": "電台和網路廣告則從九月開始每天撥出。",
+    "question": "Radio and Internet ads will ______ daily starting in September.",
+    "ans": "run"
+  },
+  "13": {
+    "chinese": "很榮幸終於能見到您本人，傑克森先生。",
+    "question": "It’s a pleasure to finally meet you _____   ____________, Mr. Jackson.",
+    "ans": "in person"
+  },
+  "14": {
+    "chinese": "請叫我馬克斯就可以了。那麼今天的議程包含哪些議題呢?",
+    "question": "Just call me Max, please. So what’s on the ____________ for today?",
+    "ans": "agenda"
+  },
+  "15": {
+    "chinese": "請坐。透納先生一會兒就可以見您。",
+    "question": "Please ________   ____   ________. Mr. Turner will be with you in a moment.",
+    "ans": "have a seat"
+  },
+  "16": {
+    "chinese": "好。我等一下沒關係。",
+    "question": "OK. I ________   __________ waiting.",
+    "ans": "don’t mind"
+  },
+  "17": {
+    "chinese": "等待的期間您想要喝點咖啡或茶嗎?",
+    "question": "Would you ________   ________ some coffee or tea while you wait?",
+    "ans": "care for"
+  },
+  "18": {
+    "chinese": "請看一下我們最新的型錄。",
+    "question": "Please take a look at our latest __________.",
+    "ans": "catalog"
+  },
+  "19": {
+    "chinese": "有什麼特別的優惠嗎?",
+    "question": "Is there any special ___________?",
+    "ans": "offer"
+  },
+  "20": {
+    "chinese": "我們有提供一個特惠方案，我相信你們會感興趣的。",
+    "question": "We're offering a special __________ that I believe you’d be interested in.",
+    "ans": "deal"
+  },
+  "21": {
+    "chinese": "我們的新機種以其耐久性聞名。",
+    "question": "Our new model has become known for its   ______________.",
+    "ans": "durability"
+  },
+  "22": {
+    "chinese": "部分原因是一項新技術延長了裝置的電池壽命。(請用空格隔開答案)",
+    "question": "This is partly due to an _____________ that ___________ the ____________ battery life.",
+    "ans": "addition extends device’s"
+  },
+  "23": {
+    "chinese": "我們可以保證我們的服務和產品會使貴公司受益。(請用空格隔開答案)",
+    "question": "We can ___________ you that your business would ____________ from our service and products.",
+    "ans": "assure benefit"
+  },
+  "24": {
+    "chinese": "擔保您會滿意。",
+    "question": "Your satisfaction is ________________.",
+    "ans": "guaranteed"
+  },
+  "25": {
+    "chinese": "我想舉杯慶祝我們的持續合作與其帶來的互惠互利。",
+    "question": "I’d like to __________   _____   ___________ to our continued cooperation and the mutual benefits it brings.",
+    "ans": "make a toast"
+  },
+  "26": {
+    "chinese": "感謝你們的熱情招待。",
+    "question": "Thank you for your ______________.",
+    "ans": "hospitality"
   }
-  
+}
