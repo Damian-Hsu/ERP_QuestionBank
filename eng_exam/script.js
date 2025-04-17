@@ -51,6 +51,7 @@ function renderFillInQuestions() {
     questionsDiv.classList.add("dark-mode");
     document.querySelectorAll(".question").forEach(question => question.classList.add("dark-mode"));
   }
+  document.getElementById("submitBtn").style.display = "inline-block"; // 顯示繼續按鈕
   // 渲染完題目後，監聽輸入框來更新進度
   addInputListeners();
   updateProgress();
@@ -64,24 +65,26 @@ function validateFillInAnswers() {
 
   fillInQuestions.forEach((q, index) => {
     const userAnswer = document.getElementById(`answer-${index}`).value.trim();
-    const correctAnswer = q.ans.trim();
     fillInAnswers[index] = userAnswer; // 儲存用戶答案
 
+    const correctAnswers = Array.isArray(q.ans) ? q.ans : [q.ans]; // 支援陣列或單一字串
+    const normalizedUserAnswer = userAnswer.toLowerCase();
+    const normalizedCorrectAnswers = correctAnswers.map(ans => ans.trim().toLowerCase());
+
     const questionDiv = document.getElementById("q" + index);
-    if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+    if (normalizedCorrectAnswers.includes(normalizedUserAnswer)) {
       score++;
       questionDiv.classList.add("correct-answer"); // 答對標示
     } else {
       questionDiv.classList.add("incorrect"); // 答錯標示
       const correctLabel = document.createElement("p");
       correctLabel.className = "correct-answer";
-      correctLabel.innerHTML = `正確答案：${correctAnswer}`;
+      correctLabel.innerHTML = `正確答案：${correctAnswers.join(" 或 ")}`;
       questionDiv.appendChild(correctLabel);
     }
 
     // 檢查是否啟用了 dark-mode 並應用樣式
     if (document.documentElement.classList.contains("dark-mode")) {
-      // 選取該問題區域內所有標籤並加上 dark-mode 類別
       const labels = questionDiv.querySelectorAll("*");
       labels.forEach(label => label.classList.add("dark-mode"));
     }
@@ -97,8 +100,9 @@ function validateFillInAnswers() {
 document.getElementById("submitBtn").addEventListener("click", () => {
   validateFillInAnswers();
   document.getElementById("submitBtn").disabled = true; // 繳交後禁用按鈕
-  
+  document.getElementById("submitBtn").style.display = "none"; // 隱藏繳交繳交按鈕
   document.getElementById("continueBtn").style.display = "inline-block";
+  
 });
 
 // --------------------------
