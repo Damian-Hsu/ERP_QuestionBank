@@ -26,107 +26,77 @@
   },
   "6": {
     "chinese": "這項產品在我的潛在市場很可能具有接受度。",
-    "question": "It is likely that the product will find _________________ in our potential market.",
-    "ans": "acceptance"
+    "question": "It is likely that the product will find acceptance in our potential market.",
+    "ans": "potential"
   },
   "7": {
-    "chinese": "網路廣告會吸引正在上網的消費者，而我們將利用廣告看板來吸引離線使用者的目光。",
-    "question": "Internet ads will catch consumers who are browsing the web, and we'll use ________________ to catch the attention of offline users.",
-    "ans": "billboards"
-  },
-  "8": {
-    "chinese": "增加網路廣告應該能大大增進品牌辨識度。",
-    "question": "More online advertising would be great for Improving ____________   ______________.",
-    "ans": "brand recognition"
-  },
-  "9": {
     "chinese": "我們會展現它對整個家庭都很有用。",
     "question": "We'll _______________ its usefulness for the entire family.",
     "ans": "demonstrate"
   },
-  "10": {
+  "8": {
     "chinese": "我們也可以展示它新的人性化功能。",
     "question": "We can also present its new user-friendly _____________.",
     "ans": "features"
   },
-  "11": {
+  "9": {
     "chinese": "我們產品上市那天就會撥出第一支電視廣告。",
-    "question": "We'll air the first TV commercial the day our product ________   _____   ________   ____________.",
-    "ans": "goes on the market"
+    "question": "We'll air the first TV _____________ the day our product goes on the market.",
+    "ans": "commercial"
   },
-  "12": {
+  "10": {
     "chinese": "電台和網路廣告則從九月開始每天撥出。",
     "question": "Radio and Internet ads will ______ daily starting in September.",
     "ans": "run"
   },
-  "13": {
+  "11": {
     "chinese": "很榮幸終於能見到您本人，傑克森先生。",
     "question": "It's a pleasure to finally meet you _____   ____________, Mr. Jackson.",
     "ans": "in person"
   },
-  "14": {
+  "12": {
     "chinese": "請叫我馬克斯就可以了。那麼今天的議程包含哪些議題呢?",
     "question": "Just call me Max, please. So what's on the ____________ for today?",
     "ans": "agenda"
   },
-  "15": {
+  "13": {
     "chinese": "請坐。透納先生一會兒就可以見您。",
     "question": "Please ________   ____   ________. Mr. Turner will be with you in a moment.",
     "ans": "have a seat"
   },
-  "16": {
+  "14": {
     "chinese": "好。我等一下沒關係。",
-    "question": "OK. I ________   __________ waiting.",
-    "ans": ["don't mind","don’t mind"]
+    "question": "OK. I don't __________ waiting.",
+    "ans": "mind"
   },
-  "17": {
+  "15": {
     "chinese": "等待的期間您想要喝點咖啡或茶嗎?",
     "question": "Would you ________   ________ some coffee or tea while you wait?",
     "ans": "care for"
   },
-  "18": {
+  "16": {
     "chinese": "請看一下我們最新的型錄。",
     "question": "Please take a look at our latest __________.",
     "ans": "catalog"
   },
-  "19": {
+  "17": {
     "chinese": "有什麼特別的優惠嗎?",
     "question": "Is there any special ___________?",
     "ans": "offer"
   },
-  "20": {
+  "18": {
     "chinese": "我們有提供一個特惠方案，我相信你們會感興趣的。",
     "question": "We're offering a special __________ that I believe you'd be interested in.",
     "ans": "deal"
   },
-  "21": {
+  "19": {
     "chinese": "我們的新機種以其耐久性聞名。",
     "question": "Our new model has become known for its   ______________.",
     "ans": "durability"
   },
-  "22": {
-    "chinese": "部分原因是一項新技術延長了裝置的電池壽命。(請用空格隔開答案)",
-    "question": "This is partly due to an _____________ that ___________ the ____________ battery life.",
-    "ans": ["addition extends device's","addition extends device’s"]
-  },
-  "23": {
-    "chinese": "我們可以保證我們的服務和產品會使貴公司受益。(請用空格隔開答案)",
-    "question": "We can ___________ you that your business would ____________ from our service and products.",
-    "ans": "assure benefit"
-  },
-  "24": {
+  "20": {
     "chinese": "擔保您會滿意。",
     "question": "Your satisfaction is ________________.",
     "ans": "guaranteed"
-  },
-  "25": {
-    "chinese": "我想舉杯慶祝我們的持續合作與其帶來的互惠互利。",
-    "question": "I'd like to __________   _____   ___________ to our continued cooperation and the mutual benefits it brings.",
-    "ans": "make a toast"
-  },
-  "26": {
-    "chinese": "感謝你們的熱情招待。",
-    "question": "Thank you for your ______________.",
-    "ans": "hospitality"
   }
 }
