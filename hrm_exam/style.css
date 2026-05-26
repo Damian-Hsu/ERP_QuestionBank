@@ -1,0 +1,417 @@
+/* 基本樣式 */
+html {
+--bg-color: #f9f9f9;
+--text-color: #000;
+}
+html.dark-mode {
+--bg-color: #121212;
+--text-color: #fff;
+}
+
+::view-transition-old(*) {
+animation: none;
+}
+
+::view-transition-new(*) {
+animation: clip 0.3s ease-in;
+}
+
+::view-transition-old(root) {
+z-index: 1;
+}
+
+::view-transition-new(root) {
+z-index: 9999;
+}
+
+html.dark-mode::view-transition-old(*) {
+animation: clip 0.3s ease-in reverse;
+}
+
+html.dark-mode::view-transition-new(*) {
+animation: none;
+}
+
+html.dark-mode::view-transition-old(root) {
+z-index: 9999;
+}
+
+html.dark-mode::view-transition-new(root) {
+z-index: 1;
+}
+
+@keyframes clip {
+from {
+    clip-path: circle(0% at var(--x) var(--y));
+}
+to {
+    clip-path: circle(var(--r) at var(--x) var(--y));
+}
+}
+
+body {
+background-color: var(--bg-color);
+color: var(--text-color);
+}
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+h1 {
+    text-align: center;
+    color: #3b5998;
+    margin-top: 20px;
+}
+
+h1.dark-mode {
+    color: #ffffff;
+}
+
+h3 {
+    padding-left: 10px;
+    margin: 0px;
+}
+
+h3.dark-mode {
+    color: #ffffff;
+}
+h5{
+    text-align: center;
+    color: #37488a;
+    margin: 20px 0px 0px 0px;
+
+}
+h6 {
+    text-align: center;
+    color: #8c93b1;
+    margin: 20px 0px 20px 0px;
+}
+
+h5.dark-mode, h6.dark-mode {
+    color: #98a6dd;
+}
+
+p {
+    margin: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.container.dark-mode {
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+.progress-bar {
+    position: sticky;
+    top: 1px; /* 距離螢幕頂端的距離 */
+    width: 100%;
+    background-color: #e6e6e6;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.progress-bar.dark-mode {
+    background-color: #333333;
+}
+
+.progress {
+    height: 15px;
+    background-color: #3b5998;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.question {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.question.dark-mode {
+    background-color: #2e2e2e;
+    color: #ffffff;
+}
+.question.fill{
+    background-color:rgba(236, 243, 250, 0.9) ;
+}
+.question.dark-mode.fill{
+    background-color:#3e3e3e ;
+}
+
+.question.fill.incorrect {
+    background-color: #f8d7da;
+    border-radius: 5px;
+    padding: 10px;
+}
+.question.dark-mode.fill.incorrect.dark-mode {
+    background-color: #ac3c3caf;
+    border-radius: 5px;
+    padding: 10px;
+}
+.options {
+    margin: 10px 0;
+    
+    display: flex;
+    flex-direction: column; /* 選項垂直排列 */
+    gap: 2px; /* 選項之間的間距 */
+}
+
+.options label {
+    display: block;
+    margin:  0;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start; /* 對齊選項頂部 */
+    gap: 1px; /* 單選框與文字之間的間距 */
+}
+
+  
+.options span {
+word-break: break-word; /* 遇到長字時自動換行 */
+}
+  
+.button-group {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* 一般按鈕 */
+.button {
+    padding: 10px 20px;
+    background-color: #3b5998;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 2px;
+}
+
+.button.dark-mode {
+    background-color: #555555;
+    color: #ffffff;
+}
+
+/* 小尺寸按鈕，文字等高 */
+.button-inline {
+    display: inline-block;
+    padding: 2px 5px;
+    font-size: 14px;
+    line-height: 1.4; 
+    height: auto;      /* 移除固定高度，隨字體大小調整 */
+    margin: 0 3px;
+}
+.button-inline.dark-mode{
+    display: inline-block;
+    padding: 2px 5px;
+    font-size: 14px;
+    line-height: 1.4; 
+    height: auto;      /* 移除固定高度，隨字體大小調整 */
+    margin: 0 3px;
+    background-color: #555555;
+    color: #ffffff;
+}
+
+.button_qc {
+    padding: 10px 20px;
+    background-color: #dfe1e7;
+    color: #3b5998;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px 2px;
+}
+.button_qc.dark-mode {
+    background-color: #e9e9e9;
+    color: #232323;
+}
+
+.button:hover {
+    background-color: #2a4274;
+}
+
+.button.dark-mode:hover {
+    background-color: #444444;
+}
+
+.incorrect {
+    background-color: #f8d7da;
+    border-radius: 5px;
+    padding: 10px;
+}
+.incorrect.dark-mode {
+    background-color: #ac3c3caf;
+    border-radius: 5px;
+    padding: 10px;
+}
+.correct-answer {
+    color: green;
+    font-weight: bold;
+}
+.correct-answer.dark-mode {
+    color:rgb(162, 254, 162);
+    font-weight: bold;
+}
+
+.score {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.score.dark-mode {
+    color: #ffffff;
+}
+
+.history {
+    margin-top: 20px;
+}
+
+.history h2 {
+    color: #3b5998;
+}
+
+.history h2.dark-mode {
+    color: #ffffff;
+}
+
+.input-group {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.input-group input {
+    width: 60px;
+    padding: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.input-group .button {
+    margin-left: 10px;
+}
+
+/* 章節多選清單 */
+.chapter-select {
+    overflow-y: auto;
+    padding: 10px;
+    text-align: left;
+    display: inline-block;
+}
+
+.chapter-select label {
+    display: block;
+    margin: 5px 0;
+}
+
+/* 隱藏區塊 */
+.hidden {
+    display: none;
+}
+
+/* 回顧頁面 */
+.review-container {
+    margin-top: 20px;
+}
+
+.review-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #3b5998;
+}
+
+.review-header.dark-mode {
+    color: #ffffff;
+}
+
+/* 單題容器，可依需求美化 */
+.question-block {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    /*border-bottom: 1px solid #ccc;*/
+}
+/*
+.question-block.dark-mode {
+    border-bottom: 1px solid #444444;
+}
+*/
+.question-block p {
+    margin: 4px 0;
+}
+.ans_color{
+    color: green;
+}
+.ans_color.dark-mode{
+    color:rgb(162, 254, 162);
+}
+.floating-button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #555555;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s ease, opacity 0.3s ease, right 0.3s ease, bottom 0.3s ease;
+    opacity:0.5;
+    
+
+}
+
+.floating-button:hover {
+    background-color: #111111;
+    opacity:0.9;
+}
+
+.floating-button.dark-mode  {
+    background-color: #616161;
+    color: #000000;
+}
+.floating-button.dark-mode:hover {
+    background-color: #ffffff;
+    opacity:0.9;
+}
+.announcement {
+    background-color: #e9e9e9;
+    color: #333;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.announcement.dark-mode{
+    background-color: #333333;
+    color: #ffffff;
+}
+.announcement p {
+    margin: 5px 0 ;
+}
+
+@media (max-width: 470px) {
+
+
+}
